@@ -16,8 +16,8 @@ class ProductRepository {
     return $product;
   }
 
-  public function delete($product_id){
-    return Product::destroy($product_id);
+  public function delete($product){
+    return $product->destroy();
   }
 
   public function find($product_id){

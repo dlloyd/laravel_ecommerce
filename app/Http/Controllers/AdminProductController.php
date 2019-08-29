@@ -95,16 +95,6 @@ class AdminProductController extends Controller
         ]);
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \Beone\Product  $admin_prod
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Product $admin_prod)
-    {
-        //
-    }
 
     /**
      * Show the form for editing the specified resource.
@@ -153,11 +143,12 @@ class AdminProductController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \Beone\Product  $product
+     * @param  \Beone\Product  $admin_prod
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Product $product)
+    public function destroy(Product $admin_prod)
     {
-        //
+        $this->products->destroy($admin_prod);
+        return redirect()->route('admin_prods.index');
     }
 }

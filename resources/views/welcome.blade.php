@@ -1,5 +1,9 @@
 @extends('app')
 
+@section('header')
+  @include('headers.welcome')
+@endsection
+
 @section('content')
 
 <!-- Slider -->
@@ -188,7 +192,7 @@
         </div>
       </div>
 
-      
+
     </div>
   </div>
 </div>

@@ -14,11 +14,11 @@ class Product extends Model implements HasMedia
   protected $fillable = ['name','priceUnit','product_type_id', 'description'];
 
   public function type(){
-    return $this->belongsTo('Beone\ProductType');
+    return $this->belongsTo('Beone\ProductType','product_type_id');
   }
 
   public function sizes(){
-    return $this->belongsToMany('Beone\ProductSize');
+    return $this->belongsToMany('Beone\ProductSize','product_size');
   }
 
   public function registerMediaConversions(Media $media = null)

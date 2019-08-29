@@ -54,16 +54,22 @@
                           <div class="row form-group">
                               <div class="col col-md-3"><label class=" form-control-label">Tailles</label></div>
                               <div class="col col-md-9">
-                                  <div class="form-check">
-                                      @foreach ($productSizes as $size)
-                                        <div class="checkbox">
-                                            <label for="checkbox1" class="form-check-label ">
-                                                <input type="checkbox" id="checkbox{{$size->id}}" name="checkbox{{$size->id}}" value="{{$size->id}}" class="form-check-input">{{$size->name}} ({{$size->code}})
-                                            </label>
-                                        </div>
-                                      @endforeach
+                                <div class="form-check">
+                                  @php($sizesChosen = $product->sizes()->pluck('product_size_id')->toArray())
+                                  
+                                  @foreach ($productSizes as $size)
+                                    <div class="checkbox">
+                                      @if (in_array($size->id,$sizesChosen))
+                                        <input type="checkbox" id="checkbox{{$size->id}}" name="sizes[]" value="{{$size->id}}" class="form-check-input" checked>{{$size->name}} ({{$size->code}})
+                                      @else
+                                        <input type="checkbox" id="checkbox{{$size->id}}" name="sizes[]" value="{{$size->id}}" class="form-check-input">{{$size->name}} ({{$size->code}})
+                                      @endif
 
-                                  </div>
+
+                                    </div>
+                                  @endforeach
+
+                                </div>
                               </div>
                           </div>
 
@@ -123,14 +129,17 @@
       },
       init: function () {
         @if(isset($product) && $product->getMedia('images'))
-          var files =
-            {!! json_encode($product->getMedia('images')) !!}
-          for (var i in files) {
-            var file = files[i]
+
+          @foreach ($product->getMedia('images') as $media)
+            var file = {!! json_encode($media) !!}
+
+            var img_url ="{{route('welcome')}}"+"{{$media->getUrl()}}"
             this.options.addedfile.call(this, file)
+            this.options.thumbnail.call(this, file,img_url);
             file.previewElement.classList.add('dz-complete')
             $('form').append('<input type="hidden" name="image[]" value="' + file.file_name + '">')
-          }
+          @endforeach
+
         @endif
       }
     }

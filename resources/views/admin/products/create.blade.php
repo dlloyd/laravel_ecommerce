@@ -56,9 +56,9 @@
                                   <div class="form-check">
                                       @foreach ($productSizes as $size)
                                         <div class="checkbox">
-                                            <label for="checkbox1" class="form-check-label ">
-                                                <input type="checkbox" id="checkbox{{$size->id}}" name="checkbox{{$size->id}}" value="{{$size->id}}" class="form-check-input">{{$size->name}} ({{$size->code}})
-                                            </label>
+
+                                          <input type="checkbox" id="checkbox{{$size->id}}" name="sizes[]" value="{{$size->id}}" class="form-check-input">{{$size->name}} ({{$size->code}})
+
                                         </div>
                                       @endforeach
 
@@ -121,15 +121,18 @@
         $('form').find('input[name="image[]"][value="' + name + '"]').remove()
       },
       init: function () {
-        @if(isset($product) && $product->images)
-          var files =
-            {!! json_encode($product->images) !!}
-          for (var i in files) {
-            var file = files[i]
+        @if(isset($product) && $product->getMedia('images'))
+
+          @foreach ($product->getMedia('images') as $media)
+            var file = {!! json_encode($media) !!}
+
+            var img_url ="{{route('welcome')}}"+"{{$media->getUrl()}}"
             this.options.addedfile.call(this, file)
+            this.options.thumbnail.call(this, file,img_url);
             file.previewElement.classList.add('dz-complete')
             $('form').append('<input type="hidden" name="image[]" value="' + file.file_name + '">')
-          }
+          @endforeach
+
         @endif
       }
     }

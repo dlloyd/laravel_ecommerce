@@ -8,6 +8,6 @@ class ProductSize extends Model
 {
 
   public function products(){
-    return $this->belongsToMany('Beone\Product');
+    return $this->belongsToMany('Beone\Product','product_size');
   }
 }
