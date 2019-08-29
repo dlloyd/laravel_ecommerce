@@ -24,3 +24,7 @@ Route::get('/admin_panel', 'HomeController@index')->name('admin_panel');
 Route::post('/admin/products/media', 'AdminProductController@storeMedia')->name('products.storeMedia');
 
 Route::resource('/admin_prods','AdminProductController')->middleware('auth');
+
+Route::post('/cart/{product}','ShoppingCartController@addToCart')->name('add_to_cart');
+
+Route::post('/cart/{id}/remove','ShoppingCartController@removeFromCart')->name('remove_from_cart');
