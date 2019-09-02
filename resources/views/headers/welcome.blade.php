@@ -14,6 +14,9 @@
         <div class="menu-desktop">
           <ul class="main-menu">
             <li>
+              <a href="{{route('welcome')}}"> Accueil </a>
+            </li>
+            <li>
               <a href="#">T-shirt</a>
             </li>
             <li>
@@ -27,16 +30,15 @@
               <a href="#">Casquette</a>
             </li>
 
-            <li>
-              <a href="#">Contact</a>
-            </li>
+
           </ul>
         </div>
 
         <!-- Icon header -->
+        @php($count = session()->has('cart')? count(session('cart')) : 0)
         <div class="wrap-icon-header flex-w flex-r-m h-full">
           <div class="flex-c-m h-full p-r-25 bor6">
-            <div class="icon-header-item cl0 hov-cl1 trans-04 p-lr-11 icon-header-noti js-show-cart" data-notify="2">
+            <div  class=" cart-items-number icon-header-item cl0 hov-cl1 trans-04 p-lr-11 icon-header-noti js-show-cart" data-notify="{{$count}}">
               <i class="zmdi zmdi-shopping-cart"></i>
             </div>
           </div>
@@ -61,7 +63,7 @@
     <!-- Icon header -->
     <div class="wrap-icon-header flex-w flex-r-m h-full m-r-15">
       <div class="flex-c-m h-full p-r-5">
-        <div class="icon-header-item cl2 hov-cl1 trans-04 p-lr-11 icon-header-noti js-show-cart" data-notify="2">
+        <div class="cart-items-number icon-header-item cl2 hov-cl1 trans-04 p-lr-11 icon-header-noti js-show-cart" data-notify="{{$count}}">
           <i class="zmdi zmdi-shopping-cart"></i>
         </div>
       </div>
@@ -79,7 +81,9 @@
   <!-- Menu Mobile -->
   <div class="menu-mobile">
     <ul class="main-menu-m">
-
+      <li>
+        <a href="{{route('welcome')}}"> Accueil </a>
+      </li>
       <li>
         <a href="#">T-shirt</a>
       </li>
@@ -94,9 +98,6 @@
         <a href="#">Casquette</a>
       </li>
 
-      <li>
-        <a href="#">Contact</a>
-      </li>
     </ul>
   </div>
 

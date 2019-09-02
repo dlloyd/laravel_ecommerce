@@ -47,20 +47,10 @@ class ProductController extends Controller
      */
     public function show(Product $product)
     {
-        return view('products.single',['product'=>$product]);
+        $similars = $this->products->getSimilars($product);
+        return view('products.single',['product'=>$product,'similars'=>$similars]);
     }
 
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  \Beone\Product  $product
-     * @return \Illuminate\Http\Response
-     */
-    public function quickview(Product $product)
-    {
-        return view('products.quick_view',['product'=>$product]);
-    }
 
 
 }

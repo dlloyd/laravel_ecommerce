@@ -69,19 +69,20 @@
 						</p>
 
 						<!--  -->
+            <form id="cart_add" method="post" action="{{route('add_to_cart',['product'=>$product->id])}}" >
 						<div class="p-t-33">
-              
+
               @if(count($product->sizes)>0)
     						<div class="flex-w flex-r-m p-b-10">
     							<div class="size-203 flex-c-m respon6">
-    								Tailles
+    								Taille
     							</div>
 
                   <div class="size-204 respon6-next">
     								<div class="rs1-select2 bor8 bg0">
-    									<select class="js-select2" name="time">
+    									<select id="size" class="js-select2" name="size_code">
                         @foreach ($product->sizes as $size)
-                          <option value="{{$size->id}}">{{$size->code}}</option>
+                          <option value="{{$size->code}}">{{$size->code}}</option>
                         @endforeach
 
     									</select>
@@ -99,19 +100,20 @@
 											<i class="fs-16 zmdi zmdi-minus"></i>
 										</div>
 
-										<input class="mtext-104 cl3 txt-center num-product" type="number" name="num-product" value="1">
+										<input class="mtext-104 cl3 txt-center num-product" type="number" name="quantity" value="1">
 
 										<div class="btn-num-product-up cl8 hov-btn3 trans-04 flex-c-m">
 											<i class="fs-16 zmdi zmdi-plus"></i>
 										</div>
 									</div>
 
-									<button class="flex-c-m stext-101 cl0 size-101 bg1 bor1 hov-btn1 p-lr-15 trans-04 js-addcart-detail">
+									<button class="flex-c-m stext-101 cl0 size-101 bg1 bor1 hov-btn1 p-lr-15 trans-04">
 										Ajouter au panier
 									</button>
 								</div>
 							</div>
 						</div>
+          </form>
 
 					</div>
 				</div>
@@ -167,37 +169,34 @@
 			<!-- Slide2 -->
 			<div class="wrap-slick2">
 				<div class="slick2">
-					<div class="item-slick2 p-l-15 p-r-15 p-t-15 p-b-15">
-						<!-- Block2 -->
-						<div class="block2">
-							<div class="block2-pic hov-img0">
-								<img src="images/product-01.jpg" alt="IMG-PRODUCT">
+          @foreach ($similars as $prod)
+            <div class="item-slick2 p-l-15 p-r-15 p-t-15 p-b-15">
+  						<!-- Block2 -->
+  						<div class="block2">
+  							<div class="block2-pic hov-img0">
+  								<img src="{{asset($prod->getFirstMediaUrl('images','thumb'))}}" alt="IMG-PRODUCT">
 
-								<a href="#" class="block2-btn flex-c-m stext-103 cl2 size-102 bg0 bor2 hov-btn1 p-lr-15 trans-04 js-show-modal1">
-									Aperçu
-								</a>
-							</div>
+  								<a href="{{route('product.show',['product'=>$prod->id])}}" class="block2-btn flex-c-m stext-103 cl2 size-102 bg0 bor2 hov-btn1 p-lr-15 trans-04">
+  									Aperçu
+  								</a>
+  							</div>
 
-							<div class="block2-txt flex-w flex-t p-t-14">
-								<div class="block2-txt-child1 flex-col-l ">
-									<a href="product-detail.html" class="stext-104 cl4 hov-cl1 trans-04 js-name-b2 p-b-6">
-										Esprit Ruffle Shirt
-									</a>
+  							<div class="block2-txt flex-w flex-t p-t-14">
+  								<div class="block2-txt-child1 flex-col-l ">
+  									<a href="{{route('product.show',['product'=>$prod->id])}}" class="stext-104 cl4 hov-cl1 trans-04 js-name-b2 p-b-6">
+  										{{$prod->name}}
+  									</a>
 
-									<span class="stext-105 cl3">
-										$16.64
-									</span>
-								</div>
+  									<span class="stext-105 cl3">
+  										{{$prod->priceUnit}}&euro;
+  									</span>
+  								</div>
 
-								<div class="block2-txt-child2 flex-r p-t-3">
-									<a href="#" class="btn-addwish-b2 dis-block pos-relative js-addwish-b2">
-										<img class="icon-heart1 dis-block trans-04" src="images/icons/icon-heart-01.png" alt="ICON">
-										<img class="icon-heart2 dis-block trans-04 ab-t-l" src="images/icons/icon-heart-02.png" alt="ICON">
-									</a>
-								</div>
-							</div>
-						</div>
-					</div>
+  							</div>
+  						</div>
+  					</div>
+          @endforeach
+
 
 
 				</div>

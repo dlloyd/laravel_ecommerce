@@ -5,6 +5,7 @@ namespace Beone\Http\Controllers;
 use Beone\Product;
 use Beone\Repositories\ProductRepository;
 use Illuminate\Http\Request;
+use Beone\Http\Requests\AddToCartRequest;
 
 class ShoppingCartController extends Controller
 {
@@ -26,7 +27,7 @@ class ShoppingCartController extends Controller
      * @param  \Beone\Product  $product
      * @return \Illuminate\Http\Response
      */
-    public function addToCart(Request $request,Product $product)
+    public function addToCart(Product $product,AddToCartRequest $request)
     {
         $cart = session()->get('cart');
 
@@ -38,22 +39,24 @@ class ShoppingCartController extends Controller
 
             $cart = [
                     $id => [
-                        "id"  => $product->id,
+                        "id"=> $id,
+                        "product_id"  => $product->id,
                         "name" => $product->name,
                         "quantity" => $request->quantity,
                         "price" => $product->priceUnit,
-                        "thumb" => $product->getMedia('images')->getFirstMediaUrl('thumb')
+                        "thumb" => env('APP_URL',null).$product->getFirstMediaUrl('images', 'thumb')
                     ]
             ];
 
         }
         else{
             $cart[$id] = [
-              "id"  => $product->id,
+              "id" => $id,
+              "product_id"  => $product->id,
               "name" => $product->name,
               "quantity" => $request->quantity,
               "price" => $product->priceUnit,
-              "thumb" => $product->getMedia('images')->getFirstMediaUrl('thumb')
+              "thumb" =>  env('APP_URL',null).$product->getFirstMediaUrl('images', 'thumb')
             ];
         }
 
@@ -62,10 +65,10 @@ class ShoppingCartController extends Controller
         }
 
         session()->put('cart', $cart);
+        return response()->json($cart[$id]);
 
-        return redirect()->back()->with('success', 'Product added to cart successfully!');
       }
-    }
+
 
 
 

@@ -27,4 +27,4 @@ Route::resource('/admin_prods','AdminProductController')->middleware('auth');
 
 Route::post('/cart/{product}','ShoppingCartController@addToCart')->name('add_to_cart');
 
-Route::post('/cart/{id}/remove','ShoppingCartController@removeFromCart')->name('remove_from_cart');
+Route::post('/cart/remove','ShoppingCartController@removeFromCart')->name('remove_from_cart');

@@ -2,6 +2,7 @@
 
 namespace Beone\Repositories;
 
+use Illuminate\Support\Facades\DB;
 use Beone\Product;
 
 class ProductRepository {
@@ -26,6 +27,10 @@ class ProductRepository {
 
   public function getAll(){
     return Product::all();
+  }
+
+  public function getSimilars($product){
+    return Product::where([['product_type_id','=',$product->type->id],['id','<>',$product->id]])->get();
   }
 
 
