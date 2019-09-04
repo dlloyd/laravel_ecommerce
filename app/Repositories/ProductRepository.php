@@ -33,5 +33,9 @@ class ProductRepository {
     return Product::where([['product_type_id','=',$product->type->id],['id','<>',$product->id]])->get();
   }
 
+  public function getAllByType($typeId){
+    return Product::where('product_type_id',$typeId)->get();
+  }
+
 
 }

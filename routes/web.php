@@ -15,6 +15,8 @@
 
 Route::get('/','ProductController@index')->name('welcome');
 
+Route::get('/type/{code}','ProductController@showByType')->name('show_by_type');
+
 Route::resource('/product','ProductController');
 
 Auth::routes(['register'=>false]);
@@ -25,6 +27,6 @@ Route::post('/admin/products/media', 'AdminProductController@storeMedia')->name(
 
 Route::resource('/admin_prods','AdminProductController')->middleware('auth');
 
-Route::post('/cart/{product}','ShoppingCartController@addToCart')->name('add_to_cart');
+Route::post('/cart/add/{product}','ShoppingCartController@addToCart')->name('add_to_cart');
 
-Route::post('/cart/remove','ShoppingCartController@removeFromCart')->name('remove_from_cart');
+Route::delete('/cart/remove/{id}','ShoppingCartController@removeFromCart')->name('remove_from_cart');

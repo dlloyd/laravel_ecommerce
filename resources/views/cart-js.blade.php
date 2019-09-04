@@ -6,7 +6,10 @@ $(document).on('submit','#cart_add',function(event){
   const url = form.attr( "action" );
   var formData = new FormData();
   formData.append('quantity',$('input[name=quantity]').val());
-  formData.append('size_code',$('#size').val());
+
+  if($('#size').length){  // if product has size add it
+    formData.append('size_code',$('#size').val());
+  }
 
   $.ajax({
     url: url,
@@ -20,12 +23,11 @@ $(document).on('submit','#cart_add',function(event){
         xhr.setRequestHeader('X-CSRF-TOKEN', "{{ csrf_token() }}");
     },
     success: function (data) {
-      console.log(data)
       addItemToCart(data);  // Add item on cart
       swal(data['name'], "ajouté au panier !", "success");
     },
     error: function (jqXHR, textStatus, errorThrown) {
-      alert(JSON.stringify(jqXHR));
+      alert('Erreur interne veuillez réessayer');
     }
   });
 
@@ -37,7 +39,7 @@ $(document).on('submit','.cart_remove',function(event){
   let url = form.attr( "action" );
   $.ajax({
     url: url,
-    method: "POST",
+    type:'DELETE',
     dataType: "json",
     processData: false,
     contentType: false,
@@ -47,10 +49,10 @@ $(document).on('submit','.cart_remove',function(event){
         xhr.setRequestHeader('X-CSRF-TOKEN', "{{ csrf_token() }}");
     },
     success: function (data) {
-      deleteItemFromCart(data.data)
+      deleteItemFromCart(data,data['totalPrice'])
     },
     error: function (jqXHR, textStatus, errorThrown) {
-      alert('error')
+        alert('Erreur interne veuillez réessayer');
     }
   });
 
@@ -64,7 +66,14 @@ function addItemToCart(item){
     if(item['size']){
       textSize = "("+item['size']+")";
     }
-    deleteItemFromCart(item); // delete if same item exists
+    let itemTotalPrice = parseFloat(item['price']*item['quantity']);
+    deleteItemFromCart(item,itemTotalPrice); // delete if same item exists
+
+    let deleteButton = "<form class='cart_remove'  method='post' action="+item['delete_route']+" >"+
+                          "<input type='hidden' name='_method' value='delete'>"+
+                          "<button type='submit' >Supprimer</button></form>";
+
+
     let itemContent = "<li class='header-cart-item flex-w flex-t m-b-12' data-id="+item['id']+">"+
                         "<div class='header-cart-item-img'>"+
                           "<img src="+item['thumb']+" alt='IMG'></div>"+
@@ -72,24 +81,24 @@ function addItemToCart(item){
                           "<a href='#' class='header-cart-item-name m-b-18 hov-cl1 trans-04'>"+
                             item['name'] +textSize+"</a>"+
                           "<span class='header-cart-item-info'>"+item['quantity']+"x"+item['price']+"&euro;"+
-                          "</span></div></li>";
+                          "</span>"+deleteButton+"</div></li>";
 
 
     $('#cart_content').append(itemContent);
-    let itemTotalPrice = parseFloat(item['price']*item['quantity']);
+
     updateTotalCart(itemTotalPrice);
     updateCartItemsNumber(1);
 
   }
 
-  function deleteItemFromCart(item){
+  function deleteItemFromCart(item,itemTotalPrice){
     let li = $('#cart_content').children().filter(function() {
         return $(this).data("id") == item['id'];
     });
-    if(li){
-      let itemTotalPrice = parseFloat(item['price']*item['quantity']);
+
+    if(li.length >0){
       let totalAmount = parseFloat($('#cart-total').text()) - itemTotalPrice; // update the total amount
-      $('#cart-total').text(totalAmount.toFixed(2).toString());
+      $('#cart-total').text(totalAmount.toFixed(2));
       updateCartItemsNumber(-1);
       li.remove();
     }
@@ -103,8 +112,8 @@ function addItemToCart(item){
   }
 
   function updateCartItemsNumber(val){
-    let number = $('.cart-items-number').first().data("notify")+val ;
-    $('.cart-items-number').data("notify",number);
+    let number = parseInt($('.cart-items-number').first().attr("data-notify"))+val ;
+    $('.cart-items-number').attr("data-notify",number);
 
   }
 

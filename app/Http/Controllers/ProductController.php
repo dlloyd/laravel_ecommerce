@@ -51,6 +51,12 @@ class ProductController extends Controller
         return view('products.single',['product'=>$product,'similars'=>$similars]);
     }
 
+    public function showByType($code){
+      $type = $this->productTypes->getTypeByCode($code);
+      $products = $this->products->getAllByType($type->id);
+      return view('products.products_by_type',['products'=>$products,'type'=>$type]);
+    }
+
 
 
 }

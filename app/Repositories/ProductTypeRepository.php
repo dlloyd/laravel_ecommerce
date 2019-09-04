@@ -14,5 +14,9 @@ class ProductTypeRepository {
     return ProductType::all();
   }
 
+  public function getTypeByCode($code){
+    return ProductType::where('code','=',$code)->firstOrFail();
+  }
+
 
 }

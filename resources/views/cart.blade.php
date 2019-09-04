@@ -32,9 +32,9 @@
                 <span class="header-cart-item-info">
                   {{$item['quantity']}} x {{$item['price']}} &euro;
                 </span>
-                <form class="cart_remove"  method="post" action="{{route('remove_from_cart')}}" >
+                <form class="cart_remove"  method="post" action="{{route('remove_from_cart',['product'=>$item['id']])}}" >
                   @method('delete')
-                  <input type="hidden" name="id" value="{{ $item['id'] }}" />
+                  
                   <button type="submit" >Supprimer</button>
                 </form>
               </div>

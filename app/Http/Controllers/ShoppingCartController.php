@@ -44,7 +44,8 @@ class ShoppingCartController extends Controller
                         "name" => $product->name,
                         "quantity" => $request->quantity,
                         "price" => $product->priceUnit,
-                        "thumb" => env('APP_URL',null).$product->getFirstMediaUrl('images', 'thumb')
+                        "thumb" => env('APP_URL',null).$product->getFirstMediaUrl('images', 'thumb'),
+                        "delete_route" => route('remove_from_cart',['product'=>$id])
                     ]
             ];
 
@@ -56,7 +57,8 @@ class ShoppingCartController extends Controller
               "name" => $product->name,
               "quantity" => $request->quantity,
               "price" => $product->priceUnit,
-              "thumb" =>  env('APP_URL',null).$product->getFirstMediaUrl('images', 'thumb')
+              "thumb" =>  env('APP_URL',null).$product->getFirstMediaUrl('images', 'thumb'),
+              "delete_route" => route('remove_from_cart',['product'=>$id])
             ];
         }
 
@@ -72,20 +74,18 @@ class ShoppingCartController extends Controller
 
 
 
-    public function removeFromCart(Request $request){
-      if($request->id) {
+    public function removeFromCart($id){
+        $cart = session()->get('cart');
 
-            $cart = session()->get('cart');
+        if(isset($cart[$id])) {
+            $total = $cart[$id]['price'] * $cart[$id]['quantity'];
+            unset($cart[$id]);
 
-            if(isset($cart[$request->id])) {
-
-                unset($cart[$request->id]);
-
-                session()->put('cart', $cart);
-            }
-
-            session()->flash('success', 'Product removed successfully');
+            session()->put('cart', $cart);
         }
+
+        return response()->json(['id'=>$id,'totalPrice'=>$total,'status'=>'removed successfully']);
+
     }
 
 

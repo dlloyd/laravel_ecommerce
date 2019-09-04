@@ -14,7 +14,7 @@
 				<i class="fa fa-angle-right m-l-9 m-r-10" aria-hidden="true"></i>
 			</a>
 
-			<a href="#" class="stext-109 cl8 hov-cl1 trans-04">
+			<a href="{{route('show_by_type',['code'=>$product->type->code])}}" class="stext-109 cl8 hov-cl1 trans-04">
 				{{ $product->type->name }}
 				<i class="fa fa-angle-right m-l-9 m-r-10" aria-hidden="true"></i>
 			</a>

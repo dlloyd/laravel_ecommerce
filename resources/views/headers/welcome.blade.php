@@ -17,17 +17,17 @@
               <a href="{{route('welcome')}}"> Accueil </a>
             </li>
             <li>
-              <a href="#">T-shirt</a>
+              <a href="{{route('show_by_type',['code'=>'TSH'])}}">T-shirt</a>
             </li>
             <li>
-              <a href="#">Hoodie</a>
+              <a href="{{route('show_by_type',['code'=>'HOO'])}}">Hoodie</a>
             </li>
             <li class="label1" data-label1="hot">
-              <a href="#">Sac</a>
+              <a href="{{route('show_by_type',['code'=>'SAC'])}}">Sac</a>
             </li>
 
             <li>
-              <a href="#">Casquette</a>
+              <a href="{{route('show_by_type',['code'=>'CAS'])}}">Casquette</a>
             </li>
 
 
@@ -85,17 +85,17 @@
         <a href="{{route('welcome')}}"> Accueil </a>
       </li>
       <li>
-        <a href="#">T-shirt</a>
+        <a href="{{route('show_by_type',['code'=>'TSH'])}}">T-shirt</a>
       </li>
       <li>
-        <a href="#">Hoodie</a>
+        <a href="{{route('show_by_type',['code'=>'HOO'])}}">Hoodie</a>
       </li>
       <li class="label1" data-label1="hot">
-        <a href="#">Sac</a>
+        <a href="{{route('show_by_type',['code'=>'SAC'])}}">Sac</a>
       </li>
 
       <li>
-        <a href="#">Casquette</a>
+        <a href="{{route('show_by_type',['code'=>'CAS'])}}">Casquette</a>
       </li>
 
     </ul>

@@ -25,7 +25,7 @@ class AddToCartRequest extends FormRequest
     {
         return [
             'quantity' => 'required',
-            'size_code'=> 'required'
+            'size_code'=> 'nullable'
         ];
     }
 }
