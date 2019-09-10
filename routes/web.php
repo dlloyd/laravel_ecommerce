@@ -30,3 +30,7 @@ Route::resource('/admin_prods','AdminProductController')->middleware('auth');
 Route::post('/cart/add/{product}','ShoppingCartController@addToCart')->name('add_to_cart');
 
 Route::delete('/cart/remove/{id}','ShoppingCartController@removeFromCart')->name('remove_from_cart');
+
+Route::get('/payment','ShoppingCartController@showPaymentPage')->name('payment_page');
+
+Route::post('/payment_validation','ShoppingCartController@paymentConfirmation')->name('payment_confirmation');

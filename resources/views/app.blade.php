@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ app()->getLocale() }}">
 <head>
 	<title>BeOne the Vision</title>
 	<meta charset="UTF-8">
@@ -210,6 +210,7 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
 	</div>
 
 
+@section('javascripts')
 
 <!--===============================================================================================-->
 	<script src="{{ asset('vendor/jquery/jquery-3.2.1.min.js')}}"></script>
@@ -278,10 +279,9 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
 	</script>
 <!--===============================================================================================-->
 	<script src="{{ asset('js/main.js')}}"></script>
+	<script src="https://js.stripe.com/v3/"></script>
 
-	@include('cart-js')
-
-
+@show
 
 </body>
 </html>

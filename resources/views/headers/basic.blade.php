@@ -43,14 +43,15 @@
             </ul>
           </div>
 
-
-					<!-- Icon header -->
-					@php($count = session()->has('cart')? count(session('cart')) : 0)
-					<div class="wrap-icon-header flex-w flex-r-m">
-						<div class="cart-items-number icon-header-item cl2 hov-cl1 trans-04 p-l-22 p-r-11 icon-header-noti js-show-cart" data-notify="{{$count}}">
-							<i class="zmdi zmdi-shopping-cart"></i>
+					@if(Route::current()->getName() !== 'payment_page')
+						<!-- Icon header -->
+						@php($count = session()->has('cart')? count(session('cart')) : 0)
+						<div class="wrap-icon-header flex-w flex-r-m">
+							<div class="cart-items-number icon-header-item cl2 hov-cl1 trans-04 p-l-22 p-r-11 icon-header-noti js-show-cart" data-notify="{{$count}}">
+								<i class="zmdi zmdi-shopping-cart"></i>
+							</div>
 						</div>
-					</div>
+					@endif
 				</nav>
 			</div>
 		</div>
@@ -62,16 +63,17 @@
         <a href="{{route('welcome')}}"><img src="{{asset('images/icons/logo.jpg')}}" alt="IMG-LOGO"></a>
       </div>
 
-      <!-- Icon header -->
-      <div class="wrap-icon-header flex-w flex-r-m h-full m-r-15">
-        <div class="flex-c-m h-full p-r-5">
+			@if(Route::current()->getName() !== 'payment_page')
+	      <!-- Icon header -->
+	      <div class="wrap-icon-header flex-w flex-r-m h-full m-r-15">
+	        <div class="flex-c-m h-full p-r-5">
 
-          <div class="cart-items-number icon-header-item cl2 hov-cl1 trans-04 p-lr-11 icon-header-noti js-show-cart" data-notify="{{$count}}">
-            <i class="zmdi zmdi-shopping-cart"></i>
-          </div>
-        </div>
-      </div>
-
+	          <div class="cart-items-number icon-header-item cl2 hov-cl1 trans-04 p-lr-11 icon-header-noti js-show-cart" data-notify="{{$count}}">
+	            <i class="zmdi zmdi-shopping-cart"></i>
+	          </div>
+	        </div>
+	      </div>
+			@endif
       <!-- Button show menu -->
       <div class="btn-show-menu-mobile hamburger hamburger--squeeze">
         <span class="hamburger-box">

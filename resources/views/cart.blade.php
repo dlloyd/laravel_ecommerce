@@ -34,7 +34,7 @@
                 </span>
                 <form class="cart_remove"  method="post" action="{{route('remove_from_cart',['product'=>$item['id']])}}" >
                   @method('delete')
-                  
+
                   <button type="submit" >Supprimer</button>
                 </form>
               </div>
@@ -52,9 +52,10 @@
 
         <div class="header-cart-buttons flex-w w-full">
 
-          <a href="#" class="flex-c-m stext-101 cl0 size-107 bg3 bor2 hov-btn3 p-lr-15 trans-04 m-b-10">
-            Passer au paiement
-          </a>
+            <a href="{{route('payment_page')}}" class="flex-c-m stext-101 cl0 size-107 bg3 bor2 hov-btn3 p-lr-15 trans-04 m-b-10">
+              Passer au paiement
+            </a>
+
         </div>
       </div>
     </div>

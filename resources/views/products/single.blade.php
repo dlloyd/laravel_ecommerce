@@ -205,3 +205,9 @@
 	</section>
 
 @endsection
+
+@section('javascripts')
+  @parent
+  @include('cart-js')
+
+@endsection
