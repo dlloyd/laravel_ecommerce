@@ -19,7 +19,7 @@
         @if($products)
           @foreach ($products as $id => $item)
             @php($total += $item['price'] * $item['quantity'])
-            <li class="header-cart-item flex-w flex-t m-b-12" data-id="{{$id}}">
+            <li class="header-cart-item flex-w flex-t m-b-12" data-id="{{$id}}" data-price="{{$item['price']}}" data-quantity="{{$item['quantity']}}">
               <div class="header-cart-item-img">
                 <img src="{{asset($item['thumb'])}}" alt="IMG">
               </div>
@@ -51,10 +51,17 @@
         </div>
 
         <div class="header-cart-buttons flex-w w-full">
-
-            <a href="{{route('payment_page')}}" class="flex-c-m stext-101 cl0 size-107 bg3 bor2 hov-btn3 p-lr-15 trans-04 m-b-10">
+          @if($products)
+            <a id="payment-link" href="{{route('payment_page')}}" class="flex-c-m stext-101 cl0 size-107 bg3 bor2 hov-btn3 p-lr-15 trans-04 m-b-10">
               Passer au paiement
             </a>
+            <h3 style="display:none;" id="empty-cart"> Votre panier est vide  </h3>
+          @else
+            <a style="display:none;" id="payment-link" href="{{route('payment_page')}}" class="flex-c-m stext-101 cl0 size-107 bg3 bor2 hov-btn3 p-lr-15 trans-04 m-b-10">
+              Passer au paiement
+            </a>
+            <h3 id="empty-cart"> Votre panier est vide  </h3>
+          @endif
 
         </div>
       </div>

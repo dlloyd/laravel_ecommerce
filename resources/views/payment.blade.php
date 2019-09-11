@@ -19,7 +19,7 @@
             <div class="row" style="padding-left:15px;margin-bottom:15px;">
 
                 <label>Nom
-                  <abbr id="cardholder-name" class="required" title="champs obligatoire">*</abbr>
+                  <abbr id="cardholder-name" style="color:red;" class="required" title="champs obligatoire">*</abbr>
                 </label>
                 <input type="text" name="name" class="form-control" required/>
 
@@ -28,21 +28,21 @@
 
               <div class="row" style="padding-left:15px;margin-bottom:15px;">
                 <label>Pays
-                  <abbr class="required" title="champs obligatoire">*</abbr>
+                  <abbr class="required" style="color:red;" title="champs obligatoire">*</abbr>
                 </label>
                 <input type="text" name="country" class="form-control" required/>
               </div>
 
               <div class="row" style="padding-left:15px;margin-bottom:15px;">
                 <label>Ville
-                  <abbr class="required" title="champs obligatoire">*</abbr>
+                  <abbr class="required" style="color:red;" title="champs obligatoire">*</abbr>
                 </label>
                 <input type="text" id="cardholder-city" name="city" class="form-control" required/>
               </div>
 
               <div class="row" style="padding-left:15px;margin-bottom:15px;">
                 <label>Adresse de livraison
-                  <abbr class="required" title="champs obligatoire">*</abbr>
+                  <abbr class="required" style="color:red;" title="champs obligatoire">*</abbr>
                 </label>
                 <input type="text"   name="address_line1" class="form-control" required/>
               </div>
@@ -60,7 +60,7 @@
 
               <div class="row" style="padding-left:15px;margin-bottom:30px;">
                   <label>Email
-                    <abbr class="required" title="champs obligatoire">*</abbr>
+                    <abbr class="required" style="color:red;" title="champs obligatoire">*</abbr>
                   </label>
                   <input type="email" id="cardholder-email" name="email" class="form-control" required/>
               </div>
@@ -141,7 +141,11 @@
 
 @section('javascripts')
   @parent
+  <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/additional-methods.min.js"></script>
+
   <script type="text/javascript">
+    $.validator.messages.required = 'Champs obligatoire';
 	  var form = document.getElementById('payment-form');
 	  var errors = document.getElementById('card-errors');
 
@@ -168,46 +172,52 @@
 
     cardButton.addEventListener('click', function(ev) {
       event.preventDefault();
-      stripe.handleCardPayment(
-        clientSecret, card, {
-          payment_method_data: {
-            billing_details: {
-              name: cardholderName.value
-              }
-            },
-            receipt_email: document.getElementById('cardholder-email').value
-          }
-
-      ).then(function(result) {
-        if (result.error) {
-          alert(JSON.stringify(result.error) )
-          swal('Erreur','Erreur lors du paiement veuillez réessayer',"error");
-        } else {
-          let form = $('#payment-form');
-          let url = form.attr( "action" );
-          console.log(form.serialize())
-          $.ajax({
-            url: url,
-            method: "POST",
-            data: form.serialize(),
-            cache: false,
-            beforeSend: function (xhr) {
-                xhr.setRequestHeader('X-CSRF-TOKEN', "{{ csrf_token() }}");
-            },
-            success: function (data) {
-              swal("Félicitation","Paiement réalisé avec succès!! vous recevrez un email de confirmation", "success")
-               .then(()=>{
-                 window.location.href = "{{route('welcome')}}"
-                });
-            },
-            error: function (jqXHR, textStatus, errorThrown) {
-              swal('Erreur','Une erreur interne est survenu',"error");
-              alert(JSON.stringify(jqXHR) )
+      if(!$('#payment-form').valid()){
+        swal('Attention','Vérifiez que vos informations de livraison soient bien renseignées','warning')
+      }
+      else{
+        $(this).attr('disabled',true);
+        stripe.handleCardPayment(
+          clientSecret, card, {
+            payment_method_data: {
+              billing_details: {
+                name: cardholderName.value
+                }
+              },
+              receipt_email: document.getElementById('cardholder-email').value
             }
-          });
+
+        ).then(function(result) {
+          if (result.error) {
+            swal('Erreur','Erreur lors du paiement veuillez réessayer',"error");
+            $(this).attr('disabled',false);
+          } else {
+            let form = $('#payment-form');
+            let url = form.attr( "action" );
+
+            $.ajax({
+              url: url,
+              method: "POST",
+              data: form.serialize(),
+              cache: false,
+              beforeSend: function (xhr) {
+                  xhr.setRequestHeader('X-CSRF-TOKEN', "{{ csrf_token() }}");
+              },
+              success: function (data) {
+                swal("Félicitation","Paiement réalisé avec succès!! Vous recevrez un email de confirmation stripe, merci de votre confiance", "success")
+                 .then(()=>{
+                   window.location.href = "{{route('welcome')}}"
+                  });
+              },
+              error: function (jqXHR, textStatus, errorThrown) {
+                swal('Erreur','Une erreur interne est survenu',"error");
+                console.log(JSON.stringify(jqXHR) )
+              }
+            });
 
         }
       });
+    }
     });
 
 

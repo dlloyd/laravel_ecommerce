@@ -23,9 +23,9 @@ Auth::routes(['register'=>false]);
 
 Route::get('/admin_panel', 'HomeController@index')->name('admin_panel');
 
-Route::post('/admin/products/media', 'AdminProductController@storeMedia')->name('products.storeMedia');
-
 Route::resource('/admin_prods','AdminProductController')->middleware('auth');
+
+Route::post('/admin/products/media', 'AdminProductController@storeMedia')->name('products.storeMedia');
 
 Route::post('/cart/add/{product}','ShoppingCartController@addToCart')->name('add_to_cart');
 

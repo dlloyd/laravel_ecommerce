@@ -70,6 +70,12 @@ class ShoppingCartController extends Controller
         }
 
         session()->put('cart', $cart);
+
+        if(session()->get('client_stripe_intent')){
+          $cartAmount = $this->totalCartAmount(session('cart'));
+          $this->updateIntentAmount(session('client_stripe_intent')->id,$cartAmount);
+        }
+
         return response()->json($cart[$id]);
 
       }
@@ -86,7 +92,16 @@ class ShoppingCartController extends Controller
 
             session()->put('cart', $cart);
         }
+        if(session()->get('client_stripe_intent')){
+          $cartAmount = $this->totalCartAmount(session('cart'));
+          if($cartAmount<=0){
+            session()->forget('client_stripe_intent');
+          }
+          else{
+            $this->updateIntentAmount(session('client_stripe_intent')->id,$cartAmount);
+          }
 
+        }
         return response()->json(['id'=>$id,'totalPrice'=>$total,'status'=>'removed successfully']);
 
     }
@@ -143,6 +158,11 @@ class ShoppingCartController extends Controller
         $total += $item['quantity']*$item['price'];
       }
       return $total;
+    }
+
+    private function updateIntentAmount($intentId,$cartAmount){
+      Stripe::setApiKey(env('STRIPE_SECRET_KEY'));
+      PaymentIntent::update($intentId,['amount'=>$cartAmount*100]);
     }
 
     private function generatePurchase($cart,$request){

@@ -2,6 +2,7 @@
 //Add product on cart script
 $(document).on('submit','#cart_add',function(event){
   event.preventDefault();
+  $('#add-to-cart-button').attr("disabled", true);
   const form = $(this);
   const url = form.attr( "action" );
   var formData = new FormData();
@@ -25,9 +26,12 @@ $(document).on('submit','#cart_add',function(event){
     success: function (data) {
       addItemToCart(data);  // Add item on cart
       swal(data['name'], "ajouté au panier !", "success");
+      $('#add-to-cart-button').attr("disabled", false);
     },
     error: function (jqXHR, textStatus, errorThrown) {
-      alert('Erreur interne veuillez réessayer');
+      swal('Erreur' ,'Une erreur interne est survenue veuillez réessayer','error');
+      console.log(JSON.stringify(jqXHR));
+      $('#add-to-cart-button').attr("disabled", false);
     }
   });
 
@@ -49,10 +53,10 @@ $(document).on('submit','.cart_remove',function(event){
         xhr.setRequestHeader('X-CSRF-TOKEN', "{{ csrf_token() }}");
     },
     success: function (data) {
-      deleteItemFromCart(data,data['totalPrice'])
+      deleteItemFromCart(data)
     },
     error: function (jqXHR, textStatus, errorThrown) {
-        alert('Erreur interne veuillez réessayer');
+        console.log(JSON.stringify(jqXHR))
     }
   });
 
@@ -67,14 +71,14 @@ function addItemToCart(item){
       textSize = "("+item['size']+")";
     }
     let itemTotalPrice = parseFloat(item['price']*item['quantity']);
-    deleteItemFromCart(item,itemTotalPrice); // delete if same item exists
+    deleteItemFromCart(item); // delete if same item exists
 
     let deleteButton = "<form class='cart_remove'  method='post' action="+item['delete_route']+" >"+
                           "<input type='hidden' name='_method' value='delete'>"+
                           "<button type='submit' >Supprimer</button></form>";
 
 
-    let itemContent = "<li class='header-cart-item flex-w flex-t m-b-12' data-id="+item['id']+">"+
+    let itemContent = "<li class='header-cart-item flex-w flex-t m-b-12' data-id="+item['id']+"  data-price="+item['price']+"  data-quantity="+item['quantity']+" >"+
                         "<div class='header-cart-item-img'>"+
                           "<img src="+item['thumb']+" alt='IMG'></div>"+
                         "<div class='header-cart-item-txt p-t-8'>"+
@@ -91,12 +95,15 @@ function addItemToCart(item){
 
   }
 
-  function deleteItemFromCart(item,itemTotalPrice){
+  function deleteItemFromCart(item){
     let li = $('#cart_content').children().filter(function() {
         return $(this).data("id") == item['id'];
     });
 
     if(li.length >0){
+      let price = parseFloat(li.data('price')); 
+      let qty = parseFloat(li.data('quantity'));
+      let itemTotalPrice = price*qty; console.log(itemTotalPrice)
       let totalAmount = parseFloat($('#cart-total').text()) - itemTotalPrice; // update the total amount
       $('#cart-total').text(totalAmount.toFixed(2));
       updateCartItemsNumber(-1);
@@ -114,6 +121,15 @@ function addItemToCart(item){
   function updateCartItemsNumber(val){
     let number = parseInt($('.cart-items-number').first().attr("data-notify"))+val ;
     $('.cart-items-number').attr("data-notify",number);
+
+    if(number==0){
+      $('#payment-link').hide();
+      $('#empty-cart').show();
+    }
+    else{
+      $('#payment-link').show();
+      $('#empty-cart').hide();
+    }
 
   }
 
