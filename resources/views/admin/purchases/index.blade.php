@@ -38,9 +38,10 @@
                                             <td>{{$purchase->customer_address_complement}}</td>
                                             <td>{{$purchase->customer_postal_code}}</td>
                                             <td>
-                                              <button type="button" style="background-color:#008000" class="btn btn-info btn-lg" data-toggle="modal" data-target="#{{$purchase->id}}details"> Détails </button>
+                                              <a href="#{{$purchase->id}}details" class="btn btn-info btn-lg" style="background-color:#008000" rel="modal:open">Voir</a>
+
                                               <!-- Modal -->
-                                              <div class="modal fade" id="{{$purchase->id}}details" role="dialog">
+                                              <div class="modal" id="{{$purchase->id}}details">
                                                 <div class="modal-dialog">
 
                                                   <!-- Modal content-->
@@ -52,28 +53,28 @@
 
                                                       <table>
                                                       <thead>
-                                                        <th class="product-thumbnail">Produit</th>
-                                                        <th class="product-name">Nom</th>
-                                                        <th class="product-size">Taille</th>
-                                                        <th class="product-quantity">Quantité</th>
+                                                        <th>Produit</th>
+                                                        <th style="width: 50%">Nom</th>
+                                                        <th>Taille</th>
+                                                        <th>Quantité</th>
                                                       </thead>
                                                       <tbody>
-                                                        @foreach ($purchase->purchase_list as $item)
+                                                        @foreach ($purchase->getPurchaseList() as $item)
                                                           <tr>
-                                                          <td class="product-thumbnail">
+                                                          <td>
                                                             <a>
-                                                              <img src="{{asset($item['thumb'])}}" alt="IMG">
+                                                              <img style="width:80px" src="{{asset($item['thumb'])}}" alt="IMG">
                                                             </a>
 
                                                           </td>
-                                                          <td class="product-name">
-                                                            <a>{{$item.name}}</a>
+                                                          <td>
+                                                            <a>{{$item['name']}}</a>
                                                           </td>
-                                                          <td class="product-size">
-                                                             @isset($item['size']) {{$item['size']}} @endisset
+                                                          <td>
+                                                            &nbsp; @isset($item['size']) {{$item['size']}} @endisset
                                                           </td>
-                                                          <td class="product-quantity">
-                                                            {{ $item.quantity }}
+                                                          <td>
+                                                            {{ $item['quantity'] }}
                                                           </td>
                                                           </tr>
                                                         @endforeach
@@ -83,9 +84,7 @@
 
 
                                                     </div>
-                                                    <div class="modal-footer">
-                                                      <button type="button" class="btn btn-default" data-dismiss="modal">Fermer</button>
-                                                    </div>
+                                                    
                                                   </div>
 
                                                 </div>
@@ -94,8 +93,8 @@
 
                                             <td>
                                               <form action="{{ route('admin_validate_purchase_delivery') }}" method="post">
-                                                 <input type="text" name="delivery-code" value='' class="delivery-code" placeholder="Code livraison" required/>
-                                                 <input type="hidden" value="{{purchase.code}}" name="code" />
+                                                 <input type="text" name="delivery_code" value='' class="delivery-code" placeholder="Code livraison" required/>
+                                                 <input type="hidden" value="{{$purchase->id}}" name="id" />
                                                  <button type="button"  class="delivery">
                                                    Valider
                                                  </button>
@@ -119,13 +118,18 @@
 @endsection
 
 @section('scripts')
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.css" />
   <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
   <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/additional-methods.min.js"></script>
+  <script src="{{asset('vendor/sweetalert/sweetalert.min.js')}}"></script>
   <script type="text/javascript">
-    $(document).ready(function(){
-      $(document).on('click','.delivery',function(event){
+  jQuery.noConflict();
+
+    jQuery(document).ready(function(){
+      jQuery(document).on('click','.delivery',function(event){
         event.preventDefault();
-        let form = $(this).parent();
+        let form = jQuery(this).parent();
         if(!form.valid()){
           swal('Attention!',' Entrez un code de livraison!','warning');
         }
@@ -139,7 +143,7 @@
           })
           .then((addCode) => {
             if (addCode) {
-              $.ajax({
+              jQuery.ajax({
                 url: form.attr( "action" ),
                 method: "POST",
                 data: form.serialize(),
@@ -163,7 +167,9 @@
 
             }
           });
+        }
 
+    });
     });
   </script>
 @stop

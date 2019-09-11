@@ -34,3 +34,9 @@ Route::delete('/cart/remove/{id}','ShoppingCartController@removeFromCart')->name
 Route::get('/payment','ShoppingCartController@showPaymentPage')->name('payment_page');
 
 Route::post('/payment_validation','ShoppingCartController@paymentConfirmation')->name('payment_confirmation');
+
+Route::get('/admin/purchases/','AdminPurchaseController@index')->name('purchases');
+
+Route::get('/admin/purchases/delivered','AdminPurchaseController@deliveredPurchases')->name('delivered_purchases');
+
+Route::post('admin/purchase/delivery','AdminPurchaseController@validatePurchaseDelivery')->name('admin_validate_purchase_delivery');

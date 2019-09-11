@@ -16,4 +16,9 @@ class Purchase extends Model
     {
         $this->attributes['purchase_list'] = json_encode($list);
     }
+
+    public function getPurchaseList()
+    {
+        return json_decode($this->attributes['purchase_list'],true);
+    }
 }

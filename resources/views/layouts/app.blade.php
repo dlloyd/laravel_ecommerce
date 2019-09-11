@@ -61,8 +61,8 @@
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <i class="menu-icon fa fa-laptop"></i>Commandes</a>
                         <ul class="sub-menu children dropdown-menu">
 
-                            <li><i class="fa fa-id-badge"></i><a href="ui-badges.html">Commandes en cours</a></li>
-                            <li><i class="fa fa-bars"></i><a href="ui-tabs.html">Commandes réalisées</a></li>
+                            <li><i class="fa fa-id-badge"></i><a href="{{route('purchases')}}">Commandes en cours</a></li>
+                            <li><i class="fa fa-bars"></i><a href="{{route('delivered_purchases')}}">Commandes réalisées</a></li>
 
                         </ul>
                     </li>
@@ -142,14 +142,12 @@
     </div><!-- /#right-panel -->
 
     <!-- Right Panel -->
-
+    
     <script src="{{ asset('panel/vendors/jquery/dist/jquery.min.js')}}"></script>
     <script src="{{ asset('panel/vendors/popper.js/dist/umd/popper.min.js')}}"></script>
     <script src="{{ asset('panel/vendors/bootstrap/dist/js/bootstrap.min.js')}}"></script>
     <script src="{{ asset('panel/assets/js/main.js')}}"></script>
 
-    <script src="{{ asset('panel/assets/js/dashboard.js')}}"></script>
-    <script src="{{ asset('panel/assets/js/widgets.js')}}"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.5.1/min/dropzone.min.js"></script>
     @yield('scripts')
 
