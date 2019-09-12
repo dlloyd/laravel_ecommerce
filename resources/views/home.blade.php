@@ -27,14 +27,13 @@
                     </button>
                     <div class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
                         <div class="dropdown-menu-content">
-                            <a class="dropdown-item" href="#">Action</a>
-                            <a class="dropdown-item" href="#">Another action</a>
-                            <a class="dropdown-item" href="#">Something else here</a>
+                            <a class="dropdown-item" href="{{route('admin_prods.index')}}">Afficher </a>
+
                         </div>
                     </div>
                 </div>
                 <h4 class="mb-0">
-                    <span class="count">10468</span>
+                    <span class="count">{{$productsCount}}</span>
                 </h4>
                 <p class="text-light">Produits</p>
 
@@ -57,14 +56,13 @@
                     </button>
                     <div class="dropdown-menu" aria-labelledby="dropdownMenuButton2">
                         <div class="dropdown-menu-content">
-                            <a class="dropdown-item" href="#">Action</a>
-                            <a class="dropdown-item" href="#">Another action</a>
-                            <a class="dropdown-item" href="#">Something else here</a>
+                            <a class="dropdown-item" href="{{route('purchases')}}">Afficher</a>
+
                         </div>
                     </div>
                 </div>
                 <h4 class="mb-0">
-                    <span class="count">10468</span>
+                    <span class="count">{{$purchasesRunningCount}}</span>
                 </h4>
                 <p class="text-light">Commandes en cours</p>
 
@@ -86,14 +84,13 @@
                     </button>
                     <div class="dropdown-menu" aria-labelledby="dropdownMenuButton3">
                         <div class="dropdown-menu-content">
-                            <a class="dropdown-item" href="#">Action</a>
-                            <a class="dropdown-item" href="#">Another action</a>
-                            <a class="dropdown-item" href="#">Something else here</a>
+                            <a class="dropdown-item" href="{{route('delivered_purchases')}}">Afficher</a>
+
                         </div>
                     </div>
                 </div>
                 <h4 class="mb-0">
-                    <span class="count">10468</span>
+                    <span class="count">{{$purchasesDeliveredCount}}</span>
                 </h4>
                 <p class="text-light">Commandes réalisées</p>
 

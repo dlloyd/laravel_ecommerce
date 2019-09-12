@@ -146,9 +146,9 @@ class AdminProductController extends Controller
      * @param  \Beone\Product  $admin_prod
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Product $admin_prod)
+    public function destroy(Request $request,Product $admin_prod)
     {
-        $this->products->destroy($admin_prod);
-        return redirect()->route('admin_prods.index');
+        $this->products->delete($admin_prod);
+        return response()->json(['status'=>'product deleted']);
     }
 }

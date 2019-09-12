@@ -18,7 +18,7 @@ class ProductRepository {
   }
 
   public function delete($product){
-    return $product->destroy();
+    return $product->delete();
   }
 
   public function find($product_id){
@@ -27,6 +27,10 @@ class ProductRepository {
 
   public function getAll(){
     return Product::all();
+  }
+
+  public function countAll(){
+    return Product::all()->count();
   }
 
   public function getSimilars($product){

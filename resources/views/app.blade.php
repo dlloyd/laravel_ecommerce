@@ -3,6 +3,9 @@
 <head>
 	<title>BeOne the Vision</title>
 	<meta charset="UTF-8">
+	<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+	<meta http-equiv="Pragma" content="no-cache">
+	<meta http-equiv="Expires" content="0">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 <!--===============================================================================================-->
 
@@ -279,6 +282,7 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
 	</script>
 <!--===============================================================================================-->
 	<script src="{{ asset('js/main.js')}}"></script>
+	@include('cart-js')
 	<script src="https://js.stripe.com/v3/"></script>
 
 @show

@@ -3,24 +3,25 @@
 namespace Beone\Http\Controllers;
 
 use Beone\Product;
-use Beone\Purchase;
+use Beone\Repositories\PurchaseRepository;
 use Beone\Repositories\ProductRepository;
 use Illuminate\Http\Request;
 use Beone\Http\Requests\AddToCartRequest;
-use Stripe\Stripe;
-use Stripe\PaymentIntent;
+use Beone\Traits\CartTrait;
 
 class ShoppingCartController extends Controller
 {
-
-
+    use CartTrait;
     /**
      *  product repo instance
      */
      protected $products;
 
-     public function __construct(ProductRepository $products){
+     protected $purchases;
+
+     public function __construct(ProductRepository $products,PurchaseRepository $purchases){
        $this->products = $products;
+       $this->purchases = $purchases;
 
      }
 
@@ -32,51 +33,21 @@ class ShoppingCartController extends Controller
      */
     public function addToCart(Product $product,AddToCartRequest $request)
     {
-        $cart = session()->get('cart');
-
-        //define id according to the size exist or not
-        $id = isset($request->size_code)? $product->id."".$request->size_code :$product->id;
-
-        // if cart is empty then this the first product
-        if(!$cart) {
-
-            $cart = [
-                    $id => [
-                        "id"=> $id,
-                        "product_id"  => $product->id,
-                        "name" => $product->name,
-                        "quantity" => $request->quantity,
-                        "price" => $product->priceUnit,
-                        "thumb" => env('APP_URL',null).$product->getFirstMediaUrl('images', 'thumb'),
-                        "delete_route" => route('remove_from_cart',['product'=>$id])
-                    ]
-            ];
-
+        if(!session()->get('cart')){
+          $cartAndNewId = $this->addItemToCart($product,$request,array());
         }
         else{
-            $cart[$id] = [
-              "id" => $id,
-              "product_id"  => $product->id,
-              "name" => $product->name,
-              "quantity" => $request->quantity,
-              "price" => $product->priceUnit,
-              "thumb" =>  env('APP_URL',null).$product->getFirstMediaUrl('images', 'thumb'),
-              "delete_route" => route('remove_from_cart',['product'=>$id])
-            ];
+          $cartAndNewId = $this->addItemToCart($product,$request,session('cart'));
         }
 
-        if(isset($request->size_code)){
-          $cart[$id]["size"]= $request->size_code;
-        }
-
-        session()->put('cart', $cart);
+        session()->put('cart', $cartAndNewId['cart']);
 
         if(session()->get('client_stripe_intent')){
           $cartAmount = $this->totalCartAmount(session('cart'));
           $this->updateIntentAmount(session('client_stripe_intent')->id,$cartAmount);
         }
-
-        return response()->json($cart[$id]);
+        $id = $cartAndNewId['newId'];
+        return response()->json($cartAndNewId['cart'][$id]);
 
       }
 
@@ -85,13 +56,9 @@ class ShoppingCartController extends Controller
 
     public function removeFromCart($id){
         $cart = session()->get('cart');
+        $newCart = $this->removeItemFromCart($cart,$id);
+        session()->put('cart', $newCart);
 
-        if(isset($cart[$id])) {
-            $total = $cart[$id]['price'] * $cart[$id]['quantity'];
-            unset($cart[$id]);
-
-            session()->put('cart', $cart);
-        }
         if(session()->get('client_stripe_intent')){
           $cartAmount = $this->totalCartAmount(session('cart'));
           if($cartAmount<=0){
@@ -102,7 +69,7 @@ class ShoppingCartController extends Controller
           }
 
         }
-        return response()->json(['id'=>$id,'totalPrice'=>$total,'status'=>'removed successfully']);
+        return response()->json(['id'=>$id,'status'=>'removed successfully']);
 
     }
 
@@ -116,14 +83,7 @@ class ShoppingCartController extends Controller
         $intent = session('client_stripe_intent');
       }
       else{
-        Stripe::setApiKey(env('STRIPE_SECRET_KEY'));
-        $amount = $this->totalCartAmount(session('cart'));
-        $intent = PaymentIntent::create([
-          'amount' => $amount*100,
-          'currency' => 'eur',
-          'allowed_source_types' => ['card'],
-          'capture_method'=>'manual',
-          ]);
+          $intent = $this->createPaymentIntent(session('cart'));
           session()->put('client_stripe_intent',$intent);
       }
 
@@ -132,12 +92,8 @@ class ShoppingCartController extends Controller
 
 
     public function paymentConfirmation(Request $request){
-        Stripe::setApiKey(env('STRIPE_SECRET_KEY'));
-        $intentId = session('client_stripe_intent')->id;
-        $intent = PaymentIntent::retrieve($intentId);
-        $payment = $intent->capture();
-
-        $this->generatePurchase(session('cart'),$request);
+        $this->captureIntent(session('client_stripe_intent')->id);
+        $this->purchases->save(session('cart'),$request->all());
 
         session()->forget('cart');
         session()->forget('client_stripe_intent');
@@ -152,32 +108,9 @@ class ShoppingCartController extends Controller
       return response()->json(['status'=>'cart deleted']);
     }
 
-    private function totalCartAmount($cart){
-      $total = 0;
-      foreach ($cart as $item) {
-        $total += $item['quantity']*$item['price'];
-      }
-      return $total;
-    }
 
-    private function updateIntentAmount($intentId,$cartAmount){
-      Stripe::setApiKey(env('STRIPE_SECRET_KEY'));
-      PaymentIntent::update($intentId,['amount'=>$cartAmount*100]);
-    }
 
-    private function generatePurchase($cart,$request){
-      $purchase = new Purchase;
-      $purchase->delivered = false;
-      $purchase->customer_name = $request->name;
-      $purchase->customer_email = $request->email;
-      $purchase->customer_country = $request->country;
-      $purchase->customer_city = $request->city;
-      $purchase->customer_address = $request->address_line1;
-      $purchase->customer_address_complement = $request->address_line2;
-      $purchase->customer_postal_code = $request->postal_code;
-      $purchase->setPurchaseListAttribute($cart);
-      $purchase->save();
-    }
+
 
 
 }

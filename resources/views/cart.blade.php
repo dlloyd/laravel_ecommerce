@@ -25,7 +25,7 @@
               </div>
 
               <div class="header-cart-item-txt p-t-8">
-                <a href="#" class="header-cart-item-name m-b-18 hov-cl1 trans-04">
+                <a href="{{route('product.show',['product'=>$item['product_id']]) }}" class="header-cart-item-name m-b-18 hov-cl1 trans-04">
                   {{$item['name']}}  @isset($item['size']) ({{$item['size']}}) @endisset
                 </a>
 

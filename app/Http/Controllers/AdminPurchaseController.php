@@ -3,18 +3,20 @@
 namespace Beone\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Beone\Purchase;
+use Beone\Repositories\PurchaseRepository;
 
 class AdminPurchaseController extends Controller
 {
+    protected $purchases;
     /**
      * Create a new controller instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(PurchaseRepository $purchases)
     {
         $this->middleware('auth');
+        $this->purchases = $purchases;
     }
 
     /**
@@ -24,20 +26,17 @@ class AdminPurchaseController extends Controller
      */
     public function index()
     {
-        $purchases = Purchase::where('delivered',false)->get();
+        $purchases = $this->purchases->getRunning();
         return view('admin.purchases.index',['purchases'=>$purchases]);
     }
 
     public function deliveredPurchases(){
-        $purchases = Purchase::where('delivered',true)->get();
+        $purchases = $this->purchases->getDelivered();
         return view('admin.purchases.delivered',['purchases'=>$purchases]);
     }
 
     public function validatePurchaseDelivery(Request $request){
-        $purchase = Purchase::find($request->id);
-        $purchase->delivery_code = $request->delivery_code;
-        $purchase->delivered = true;
-        $purchase->save();
+        $this->purchases->validateDelivery($request->all());
         return response()->json(['status'=>'purchase delivered']);
     }
 }
