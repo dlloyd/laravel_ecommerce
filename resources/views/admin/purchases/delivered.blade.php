@@ -15,30 +15,61 @@
                                     <thead>
                                         <tr>
                                             <th>Id</th>
-                                            <th>Nom</th>
+                                            <th>Nom Prénom</th>
                                             <th>Email</th>
-                                            <th>Pays</th>
-                                            <th>Ville</th>
-                                            <th>Addresse</th>
-                                            <th>Adresse complément </th>
-                                            <th>Code Postal </th>
+                                            <th>Infos de livraison </th>
                                             <th>Détail Commande </th>
                                             <th> Code livraison  </th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                      @foreach ($purchases as $purchase)
+                                      @foreach ($purchases->reverse() as $purchase)
                                         <tr>
                                             <td>{{ $purchase->id }}</td>
                                             <td>{{$purchase->customer_name}}</td>
                                             <td>{{$purchase->customer_email}}</td>
-                                            <td>{{$purchase->customer_country}}</td>
-                                            <td>{{$purchase->customer_city}}</td>
-                                            <td>{{$purchase->customer_address}}</td>
-                                            <td>{{$purchase->customer_address_complement}}</td>
-                                            <td>{{$purchase->customer_postal_code}}</td>
                                             <td>
-                                              <a href="#{{$purchase->id}}details" class="btn btn-info btn-lg" style="background-color:#008000" rel="modal:open">Voir</a>
+                                              <a href="#{{$purchase->id}}delivering" class="btn btn-outline-success" style="border-radius:30px;" rel="modal:open">Informations</a>
+
+                                              <!-- Modal -->
+                                              <div class="modal" id="{{$purchase->id}}delivering">
+                                                <div class="modal-dialog">
+
+                                                  <!-- Modal content-->
+                                                  <div class="modal-content">
+                                                    <div class="modal-header">
+                                                      <h4 class="modal-title">Informations de livraison </h4>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <div class="row" style="margin-bottom:20px;">
+                                                          <div class="col-sm">Pays:</div>
+                                                          <div class="col-sm">{{$purchase->customer_country}}</div>
+                                                        </div>
+                                                        <div class="row" style="margin-bottom:20px;">
+                                                          <div class="col-sm">Ville:</div>
+                                                          <div class="col-sm">{{$purchase->customer_city}}</div>
+                                                        </div>
+                                                        <div class="row" style="margin-bottom:20px;">
+                                                          <div class="col-sm">Code Postal:</div>
+                                                          <div class="col-sm">{{$purchase->customer_postal_code}}</div>
+                                                        </div>
+                                                        <div class="row" style="margin-bottom:20px;">
+                                                          <div class="col-sm">Adresse:</div>
+                                                          <div class="col-sm">{{$purchase->customer_address}}</div>
+                                                        </div>
+                                                        <div class="row" style="margin-bottom:20px;">
+                                                          <div class="col-sm">Complement adresse:</div><br/>
+                                                          <p>{{$purchase->customer_address_complement}}</p>
+                                                        </div>
+
+                                                  </div>
+
+                                                </div>
+                                              </div>
+                                            </td>
+
+                                            <td>
+                                              <a href="#{{$purchase->id}}details" class="btn btn-outline-success" style="border-radius:30px;" rel="modal:open">Commande</a>
 
                                               <!-- Modal -->
                                               <div class="modal" id="{{$purchase->id}}details">
@@ -70,11 +101,11 @@
                                                           <td>
                                                             <a>{{$item['name']}}</a>
                                                           </td>
-                                                          <td>
-                                                            &nbsp; @isset($item['size']) {{$item['size']}} @endisset
+                                                          <td align="center">
+                                                             @isset($item['size']) {{$item['size']}} @endisset
                                                           </td>
-                                                          <td>
-                                                            {{ $item['quantity'] }}
+                                                          <td align="center">
+                                                             {{ $item['quantity'] }}
                                                           </td>
                                                           </tr>
                                                         @endforeach
@@ -116,6 +147,6 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.css" />
   <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
   <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/additional-methods.min.js"></script>
-  
+
 
 @stop

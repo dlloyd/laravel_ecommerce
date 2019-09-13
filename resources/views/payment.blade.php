@@ -21,7 +21,7 @@
                 <label>Nom
                   <abbr id="cardholder-name" style="color:red;" class="required" title="champs obligatoire">*</abbr>
                 </label>
-                <input type="text" name="name" class="form-control" required/>
+                <input type="text" name="name" placeholder="Nom et prénom" class="form-control" required/>
 
 
               </div> <!-- end name  -->
@@ -52,7 +52,7 @@
               </div>
 
               <div class="row" style="margin-bottom:15px;">
-                <div class="col-md-3 col-sm-3">
+                <div class="col-md-3 col-sm-3 col-lg-6 col-xl-6">
                   <label>Code Postal</label>
                   <input type="text"  name="postal_code" class="form-control" />
                 </div>

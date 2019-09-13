@@ -22,7 +22,7 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                      @foreach ($products as $prod)
+                                      @foreach ($products->reverse() as $prod)
                                         <tr>
                                             <td><img src="{{asset($prod->getFirstMediaUrl('images', 'thumb'))}}" /></td>
                                             <td>{{$prod->name}}</td>
