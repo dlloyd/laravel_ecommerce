@@ -9,6 +9,8 @@ use Stripe\PaymentIntent;
 
       public function addItemToCart($product,$request,$cart)
       {
+          if($cart==null){  $cart = array();  }
+
           //define id according to the size exist or not
           $id = isset($request['size_code'])? $product->id."".$request['size_code'] :$product->id;
 
@@ -18,7 +20,7 @@ use Stripe\PaymentIntent;
             "name" => $product->name,
             "quantity" => $request->quantity,
             "price" => $product->priceUnit,
-            "thumb" =>  env('APP_URL',null).$product->getFirstMediaUrl('images', 'thumb'),
+            "thumb" => $product->getFirstMediaUrl('images', 'thumb'),
             "delete_route" => route('remove_from_cart',['product'=>$id])
           ];
 
@@ -26,7 +28,7 @@ use Stripe\PaymentIntent;
             $cart[$id]["size"]= $request['size_code'];
           }
 
-          return ['cart'=>$cart,'newId'=>$id];
+          return ['cart'=>$cart,'item'=>$cart[$id]];
 
         }
 
@@ -54,7 +56,7 @@ use Stripe\PaymentIntent;
           $intent = PaymentIntent::create([
             'amount' => $amount*100,
             'currency' => 'eur',
-            'allowed_source_types' => ['card'],
+            'payment_method_types' => ['card'],
             'capture_method'=>'manual',
             ]);
             return $intent;

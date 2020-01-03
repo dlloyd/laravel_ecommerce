@@ -34,21 +34,26 @@ class ShoppingCartController extends Controller
     public function addToCart(Product $product,AddToCartRequest $request)
     {
         if(!session()->get('cart')){
-          $cartAndNewId = $this->addItemToCart($product,$request,array());
+          $cartAndNewItem = $this->addItemToCart($product,$request,null);
         }
         else{
-          $cartAndNewId = $this->addItemToCart($product,$request,session('cart'));
+          $cartAndNewItem = $this->addItemToCart($product,$request,session('cart'));
         }
 
-        session()->put('cart', $cartAndNewId['cart']);
+        session()->put('cart', $cartAndNewItem['cart']);
 
         if(session()->get('client_stripe_intent')){
           $cartAmount = $this->totalCartAmount(session('cart'));
           $this->updateIntentAmount(session('client_stripe_intent')->id,$cartAmount);
         }
-        $id = $cartAndNewId['newId'];
-        return response()->json($cartAndNewId['cart'][$id]);
 
+        return response()->json($cartAndNewItem['item']);
+
+      }
+
+      public function getCart(){
+        $cart = !session()->get('cart') ? null: session()->get('cart');
+        return response()->json($cart);
       }
 
 

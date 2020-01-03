@@ -190,7 +190,7 @@
         ).then(function(result) {
           if (result.error) {
             swal('Erreur','Erreur lors du paiement veuillez réessayer',"error");
-            $(this).attr('disabled',false);
+            $('#card-button').attr('disabled',false);
           } else {
             let form = $('#payment-form');
             let url = form.attr( "action" );
@@ -210,7 +210,8 @@
                   });
               },
               error: function (jqXHR, textStatus, errorThrown) {
-                swal('Erreur','Une erreur interne est survenu',"error");
+                swal('Erreur','Une erreur interne est survenu! Vérifiez que votre email est correct sinon réessayez',"error");
+                $('#card-button').attr('disabled',false);
                 console.log(JSON.stringify(jqXHR) )
               }
             });

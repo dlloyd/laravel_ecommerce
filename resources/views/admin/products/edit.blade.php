@@ -44,7 +44,12 @@
                               <div class="col-12 col-md-9">
                                   <select name="product_type_id" id="product_type_id" class="form-control">
                                     @foreach ($productTypes as $type)
-                                      <option value="{{$type->id}}">{{$type->name}}</option>
+
+                                      @if ($type->id == $product->type->id)
+                                        <option value="{{$type->id}}" selected>{{$type->name}}</option>
+                                      @else
+                                        <option value="{{$type->id}}">{{$type->name}}</option>
+                                      @endif
                                     @endforeach
 
                                   </select>
@@ -56,7 +61,7 @@
                               <div class="col col-md-9">
                                 <div class="form-check">
                                   @php($sizesChosen = $product->sizes()->pluck('product_size_id')->toArray())
-                                  
+
                                   @foreach ($productSizes as $size)
                                     <div class="checkbox">
                                       @if (in_array($size->id,$sizesChosen))
@@ -133,7 +138,7 @@
           @foreach ($product->getMedia('images') as $media)
             var file = {!! json_encode($media) !!}
 
-            var img_url ="{{route('welcome')}}"+"{{$media->getUrl()}}"
+            var img_url ="{{$media->getUrl()}}"
             this.options.addedfile.call(this, file)
             this.options.thumbnail.call(this, file,img_url);
             file.previewElement.classList.add('dz-complete')

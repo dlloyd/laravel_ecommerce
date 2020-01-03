@@ -3,9 +3,7 @@
 <head>
 	<title>BeOne the Vision</title>
 	<meta charset="UTF-8">
-	<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-	<meta http-equiv="Pragma" content="no-cache">
-	<meta http-equiv="Expires" content="0">
+
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 <!--===============================================================================================-->
 
@@ -78,7 +76,7 @@
 					</span>
 
 					<p class="stext-108 cl6 p-t-27">
-						Be One - The Vision est une marque de textile international, qui propose des produits Street Wear, Sport Chic, fabriqué à Bordeaux (Made in France).
+						Be One - The Vision est une marque de textile internationale, qui propose des produits Street Wear, Sport Chic, fabriqué à Bordeaux (Made in France).
 					</p>
 				</div>
 			</div>
@@ -136,7 +134,7 @@
 					</h4>
 
 					<p class="stext-107 cl7 size-201">
-						Be One - The Vision est une marque de textile international, qui propose des produits Street Wear, Sport Chic, fabriqué à Bordeaux (Made in France).
+						Be One - The Vision est une marque de textile internationale, qui propose des produits Street Wear, Sport Chic, fabriqué à Bordeaux (Made in France).
 					</p>
 
 					<div class="p-t-27">
@@ -280,9 +278,28 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
 			})
 		});
 	</script>
+
 <!--===============================================================================================-->
 	<script src="{{ asset('js/main.js')}}"></script>
 	@include('cart-js')
+	<script>
+	$(document).ready(function(){
+    $.ajax({
+       url : '/cart/details',
+       type : 'GET',
+       dataType : 'json',
+       success : function(data){
+					 initCart(data)
+       },
+			 error: function(error){
+				 console.log(error)
+			 }
+    });
+
+
+	})
+
+</script>
 	<script src="https://js.stripe.com/v3/"></script>
 
 @show
