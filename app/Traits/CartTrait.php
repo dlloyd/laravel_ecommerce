@@ -1,8 +1,6 @@
 <?php
 
 namespace Beone\Traits;
-use Stripe\Stripe;
-use Stripe\PaymentIntent;
 
   trait CartTrait
   {
@@ -49,30 +47,6 @@ use Stripe\PaymentIntent;
           }
           return $total;
         }
-
-        public function createPaymentIntent($cart){
-          Stripe::setApiKey(env('STRIPE_SECRET_KEY'));
-          $amount = $this->totalCartAmount($cart);
-          $intent = PaymentIntent::create([
-            'amount' => $amount*100,
-            'currency' => 'eur',
-            'payment_method_types' => ['card'],
-            'capture_method'=>'manual',
-            ]);
-            return $intent;
-        }
-
-        public function updateIntentAmount($intentId,$cartAmount){
-          Stripe::setApiKey(env('STRIPE_SECRET_KEY'));
-          PaymentIntent::update($intentId,['amount'=>$cartAmount*100]);
-        }
-
-        public function captureIntent($intentId){
-          Stripe::setApiKey(env('STRIPE_SECRET_KEY'));
-          $intent = PaymentIntent::retrieve($intentId);
-          $intent->capture();
-        }
-
 
 
   }

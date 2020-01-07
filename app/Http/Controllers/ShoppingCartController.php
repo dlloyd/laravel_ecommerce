@@ -8,10 +8,12 @@ use Beone\Repositories\ProductRepository;
 use Illuminate\Http\Request;
 use Beone\Http\Requests\AddToCartRequest;
 use Beone\Traits\CartTrait;
+use Beone\Traits\StripeIntentTrait;
 
 class ShoppingCartController extends Controller
 {
     use CartTrait;
+    use StripeIntentTrait;
     /**
      *  product repo instance
      */
@@ -33,29 +35,18 @@ class ShoppingCartController extends Controller
      */
     public function addToCart(Product $product,AddToCartRequest $request)
     {
-        if(!session()->get('cart')){
-          $cartAndNewItem = $this->addItemToCart($product,$request,null);
-        }
-        else{
-          $cartAndNewItem = $this->addItemToCart($product,$request,session('cart'));
-        }
+        $item=$this->addItemToSessionCart($product,$request);
+        $this->updateSessionCartAmount();
 
-        session()->put('cart', $cartAndNewItem['cart']);
+        return response()->json($item);
 
-        if(session()->get('client_stripe_intent')){
-          $cartAmount = $this->totalCartAmount(session('cart'));
-          $this->updateIntentAmount(session('client_stripe_intent')->id,$cartAmount);
-        }
+    }
 
-        return response()->json($cartAndNewItem['item']);
 
-      }
-
-      public function getCart(){
+    public function getCart(){
         $cart = !session()->get('cart') ? null: session()->get('cart');
         return response()->json($cart);
-      }
-
+    }
 
 
 
@@ -88,7 +79,8 @@ class ShoppingCartController extends Controller
         $intent = session('client_stripe_intent');
       }
       else{
-          $intent = $this->createPaymentIntent(session('cart'));
+          $amount = $this->totalCartAmount(session('cart'));
+          $intent = $this->createPaymentIntent($amount);
           session()->put('client_stripe_intent',$intent);
       }
 
@@ -100,17 +92,45 @@ class ShoppingCartController extends Controller
         $this->captureIntent(session('client_stripe_intent')->id);
         $this->purchases->save(session('cart'),$request->all());
 
-        session()->forget('cart');
-        session()->forget('client_stripe_intent');
+        $this->deleteSessionCart();
         return response()->json(['status'=>'purchase created']);
 
 
     }
 
     public function deleteCart(){
+      $this->deleteSessionCartBis(session());
+      return response()->json(['status'=>'cart deleted']);
+    }
+
+    private function deleteSessionCart(){
       session()->forget('cart');
       session()->forget('client_stripe_intent');
-      return response()->json(['status'=>'cart deleted']);
+    }
+
+    private function deleteSessionCartBis($session){
+      $session->forget('cart');
+      $session->forget('client_stripe_intent');
+
+    }
+
+    private function addItemToSessionCart($product,$request){
+      if(!session()->get('cart')){
+        $cartAndNewItem = $this->addItemToCart($product,$request,null);
+      }
+      else{
+        $cartAndNewItem = $this->addItemToCart($product,$request,session('cart'));
+      }
+
+      session()->put('cart', $cartAndNewItem['cart']);
+      return $cartAndNewItem['item'];
+    }
+
+    private function updateSessionCartAmount(){
+      if(session()->get('client_stripe_intent')){
+        $cartAmount = $this->totalCartAmount(session('cart'));
+        $this->updateIntentAmount(session('client_stripe_intent')->id,$cartAmount);
+      }
     }
 
 
