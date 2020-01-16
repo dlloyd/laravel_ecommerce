@@ -40,11 +40,13 @@ namespace Beone\Traits;
 
 
 
-        public function totalCartAmount($cart){
+        public function totalCartAmount($cart,$shipping){
           $total = 0;
           foreach ($cart as $item) {
             $total += $item['quantity']*$item['price'];
           }
+
+          $total += $shipping;
           return $total;
         }
 

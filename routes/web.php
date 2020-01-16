@@ -42,3 +42,9 @@ Route::get('/admin/purchases/','AdminPurchaseController@index')->name('purchases
 Route::get('/admin/purchases/delivered','AdminPurchaseController@deliveredPurchases')->name('delivered_purchases');
 
 Route::post('admin/purchase/delivery','AdminPurchaseController@validatePurchaseDelivery')->name('admin_validate_purchase_delivery');
+
+Route::get('admin/get-prod/stock/{admin_prod}','AdminProductController@editStock')->name('admin_prods.edit_stock');
+
+Route::put('admin/update-prod/stock/{admin_prod}','AdminProductController@updateStock')->name('admin_prods.update_stock');
+
+Route::post('/shipping/price','ShoppingCartController@setShippingPrice')->name('set_shipping_price');

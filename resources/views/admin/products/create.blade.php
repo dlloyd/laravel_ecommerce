@@ -76,6 +76,11 @@
                             </div>
                           </div>
 
+                          <div class="row form-group">
+                              <div class="col col-md-3"><label for="name" class=" form-control-label">Quantité en stock</label></div>
+                              <div class="col-12 col-md-9"><input min="0" type="number" name="quantity"  class="form-control"><small class="form-text text-muted">Uniquement utile pour produits sans taille</small></div>
+                          </div>
+
                         </div>
               <div class="card-footer">
                   <button type="submit" class="btn btn-primary btn-sm">

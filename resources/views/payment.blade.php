@@ -30,7 +30,10 @@
                 <label>Pays
                   <abbr class="required" style="color:red;" title="champs obligatoire">*</abbr>
                 </label>
-                <input type="text" name="country" class="form-control" required/>
+                <select class="form-control" name="country" id="shipping_country" required>
+                  @include('country_select')
+                </select>
+
               </div>
 
               <div class="row" style="padding-left:15px;margin-bottom:15px;">
@@ -89,11 +92,14 @@
                         </td>
                       </tr>
                     @endforeach
+                    @php($total+=session('shipping'))
 
                   </tbody>
                 </table>
 
               </div>
+
+              <div>Frais de livraison: <span id="shipping-cost"></span> &euro; </div>
               <div class="flex-w flex-t p-t-27 p-b-33">
                 <div class="size-208">
                   <span class="mtext-101 cl2">
@@ -102,9 +108,9 @@
                 </div>
 
                 <div class="size-209 p-t-1">
-                  <span class="mtext-110 cl2">
-                    {{$total}} &euro;
-                  </span>
+                  <span id="total" class="mtext-110 cl2">
+                    {{$total}}
+                  </span> &euro;
                 </div>
               </div>
 
@@ -143,6 +149,45 @@
   @parent
   <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
   <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/additional-methods.min.js"></script>
+
+  <script type="text/javascript">
+    $(document).ready(function(){
+      let country_code = $('#shipping_country :selected').val()
+      updateShipping(country_code)
+      $('#shipping_country').change(function(){
+        country_code = $('#shipping_country :selected').val()
+        updateShipping(country_code)
+        console.log(country_code)
+      })
+      console.log(country_code)
+
+      function updateShipping(code){
+        let url = '{{ route("set_shipping_price") }}';
+        let formData = new FormData();
+        formData.append('country_code',code);
+        $.ajax({
+          url: url,
+          method: "POST",
+          dataType: "json",
+          processData:false,
+          contentType:false,
+          data: formData,
+          cache: false,
+          beforeSend: function (xhr) {
+              xhr.setRequestHeader('X-CSRF-TOKEN', "{{ csrf_token() }}");
+          },
+          success: function (data) {
+            console.log(data)
+            $('#shipping-cost').text(data['shipping_price'])
+            $('#total').text(data['total'])
+          },
+          error: function (jqXHR, textStatus, errorThrown) {
+            console.log(JSON.stringify(jqXHR));
+          }
+        });
+      }
+    });
+  </script>
 
   <script type="text/javascript">
     $.validator.messages.required = 'Champs obligatoire';
@@ -223,5 +268,6 @@
 
 
 	</script>
+
 
 @endsection

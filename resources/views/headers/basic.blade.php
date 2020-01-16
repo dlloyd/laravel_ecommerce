@@ -32,7 +32,13 @@
               <li>
                 <a href="{{route('show_by_type',['code'=>'HOO'])}}">Hoodie</a>
               </li>
-              <li class="label1" data-label1="hot">
+							<li>
+                <a href="{{route('show_by_type',['code'=>'PUL'])}}">Pull</a>
+              </li>
+							<li class="label1" data-label1="hot">
+                <a href="{{route('show_by_type',['code'=>'COU'])}}">Coupe-vent</a>
+              </li>
+              <li>
                 <a href="{{route('show_by_type',['code'=>'SAC'])}}">Sac</a>
               </li>
 
@@ -102,9 +108,15 @@
         <li>
           <a href="{{route('show_by_type',['code'=>'HOO'])}}">Hoodie</a>
         </li>
-        <li class="label1" data-label1="hot">
-          <a href="{{route('show_by_type',['code'=>'SAC'])}}">Sac</a>
-        </li>
+				<li>
+					<a href="{{route('show_by_type',['code'=>'PUL'])}}">Pull</a>
+				</li>
+				<li class="label1" data-label1="hot" >
+					<a href="{{route('show_by_type',['code'=>'COU'])}}" >Coupe-vent</a>
+				</li>
+				<li>
+					<a href="{{route('show_by_type',['code'=>'SAC'])}}">Sac</a>
+				</li>
 
         <li>
           <a href="{{route('show_by_type',['code'=>'CAS'])}}">Casquette</a>

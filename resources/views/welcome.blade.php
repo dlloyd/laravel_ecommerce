@@ -10,7 +10,7 @@
 <section class="section-slide">
   <div class="wrap-slick1 rs2-slick1">
     <div class="slick1">
-      <div class="item-slick1 bg-overlay1" style="background-image: url(images/beone-2.jpg);" data-thumb="images/beone-2.jpg" data-caption="Hoodie">
+      <div class="item-slick1 bg-overlay1" style="background-image: url(images/beone-1.jpg);" data-thumb="images/beone-1.jpg" data-caption="Hoodie">
         <div class="container h-full">
           <div class="flex-col-c-m h-full p-t-100 p-b-60 respon5">
             <div class="layer-slick1 animated visible-false" data-appear="fadeInDown" data-delay="0">
@@ -219,6 +219,14 @@
 
         <button class="stext-106 cl6 hov1 bor3 trans-04 m-r-32 m-tb-5" data-filter=".TSH">
           T-shirts
+        </button>
+
+        <button class="stext-106 cl6 hov1 bor3 trans-04 m-r-32 m-tb-5" data-filter=".PUL">
+          Pulls
+        </button>
+
+        <button class="stext-106 cl6 hov1 bor3 trans-04 m-r-32 m-tb-5" data-filter=".COU">
+          Coupes-vent
         </button>
 
         <button class="stext-106 cl6 hov1 bor3 trans-04 m-r-32 m-tb-5" data-filter=".CAS">

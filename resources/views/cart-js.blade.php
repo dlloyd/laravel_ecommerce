@@ -5,8 +5,8 @@ $(document).on('submit','#cart_add',function(event){
   $('#add-to-cart-button').attr("disabled", true);
   const form = $(this);
   const url = form.attr( "action" );
-  var formData = new FormData();
-  formData.append('quantity',$('input[name=quantity]').val());
+  let formData = new FormData();
+  formData.append('quantity',$('#stock').val());
 
   if($('#size').length){  // if product has size add it
     formData.append('size_code',$('#size').val());
@@ -69,7 +69,7 @@ function addItemToCart(item){
     let itemTotalPrice = parseFloat(item['price']*item['quantity']);
     deleteItemFromCart(item); // delete if same item exists
     appendItemToCartContent(item)
-    
+
 
     updateTotalCart(itemTotalPrice);
     updateCartItemsNumber(1);
@@ -84,7 +84,7 @@ function addItemToCart(item){
     if(li.length >0){
       let price = parseFloat(li.data('price'));
       let qty = parseFloat(li.data('quantity'));
-      let itemTotalPrice = price*qty; console.log(itemTotalPrice)
+      let itemTotalPrice = price*qty; 
       let totalAmount = parseFloat($('#cart-total').text()) - itemTotalPrice; // update the total amount
       $('#cart-total').text(totalAmount.toFixed(2));
       updateCartItemsNumber(-1);
@@ -113,7 +113,6 @@ function addItemToCart(item){
     let totalAmount = 0
     let itemsNumber = 0
     for (let [key,item] of Object.entries(items)) {
-      console.log(item)
       itemsNumber++
       totalAmount += parseFloat(item['price']*item['quantity']);
       appendItemToCartContent(item)

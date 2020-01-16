@@ -17,6 +17,7 @@
                                             <th>Image</th>
                                             <th>Nom</th>
                                             <th>Prix Unitaire(euros)</th>
+                                            <th> Stock </th>
                                             <th>Mettre à jour</th>
                                             <th>Supprimer</th>
                                         </tr>
@@ -27,6 +28,12 @@
                                             <td><img src="{{asset($prod->getFirstMediaUrl('images', 'thumb'))}}" /></td>
                                             <td>{{$prod->name}}</td>
                                             <td>{{$prod->priceUnit}}</td>
+                                            @if($prod->sizes->isEmpty())
+                                              <td> {{$prod->quantity}}  </td>
+                                            @else
+                                              <td><a class="btn btn-outline-warning" style="border-radius:30px;" href="{{route('admin_prods.edit_stock',['admin_prod'=> $prod->id])}}" > Voir </a></td>
+                                            @endif
+
                                             <td><a class="btn btn-outline-success" style="border-radius:30px;" href="{{route('admin_prods.edit',['admin_prod'=> $prod->id])}}" > Modifier </a></td>
                                             <td>
 

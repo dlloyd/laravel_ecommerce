@@ -140,6 +140,30 @@ class AdminProductController extends Controller
         return redirect()->route('admin_prods.index');
     }
 
+
+
+    public function editStock(Product $admin_prod)
+    {
+        $prodSizes = $admin_prod->sizes;
+        return view('admin.products.stock',['productSizes'=>$prodSizes,'product'=>$admin_prod]);
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  Request $request
+     * @param  \Beone\Product  $admin_prod
+     * @return \Illuminate\Http\Response
+     */
+    public function updateStock(Request $request, Product $admin_prod)
+    {
+        $size_id = $request->input('size_id');
+        $quantity = $request->quantity;
+        $admin_prod->sizes()->updateExistingPivot($size_id,['quantity'=>$quantity]);
+
+        return response()->json(['status'=>'stock updated','request'=>$request->all()]);
+    }
+
     /**
      * Remove the specified resource from storage.
      *

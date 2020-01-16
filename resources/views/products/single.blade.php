@@ -82,30 +82,58 @@
     								<div class="rs1-select2 bor8 bg0">
     									<select id="size" class="js-select2" name="size_code">
                         @foreach ($product->sizes as $size)
-                          <option value="{{$size->code}}">{{$size->code}}</option>
+                          @if($size->pivot->quantity > 0 )
+                            <option value="{{$size->code}}">{{$size->code}}/Stock:{{$size->pivot->quantity}}</option>
+                          @else
+                            <option value="{{$size->code}}" disabled>{{$size->code}}/Stock:{{$size->pivot->quantity}}</option>
+                          @endif
                         @endforeach
 
     									</select>
     									<div class="dropDownSelect2"></div>
+                      @foreach ($product->sizes as $size)
+                        <div id="{{$size->code}}-stock" hidden>{{$size->pivot->quantity}}</div>
+                      @endforeach
+
     								</div>
     							 </div>
 
     						  </div>
+                  <div class="flex-w flex-r-m p-b-10">
+                    <div class="size-203 flex-c-m respon6">
+                    </div>
+    								<div class="size-204 respon6-next">
+    									<div class="rs1-select2 bor8 bg0">
+    										<select id="stock" class="js-select2" name="quantity">
+                          <!-- Dynamic change depending on stock for a size -->
+                        </select>
+                        <div class="dropDownSelect2"></div>
+    									</div>
+
+    								</div>
+    							</div>
+              @else
+              <div class="flex-w flex-r-m p-b-10">
+                <div class="size-203 flex-c-m respon6">
+                </div>
+                <div class="size-204 respon6-next">
+                  <div class="rs1-select2 bor8 bg0">
+                    <select id="stock" class="js-select2" name="quantity">
+                      @for($i=1;$i<= $product->quantity; $i++)
+                      <option value="{{$i}}">{{$i}}</option>
+                      @endfor
+                    </select>
+                    <div class="dropDownSelect2"></div>
+                  </div>
+
+                </div>
+              </div>
+
               @endif
 
-							<div class="flex-w flex-r-m p-b-10">
+
+              <div class="flex-w flex-r-m p-b-10">
 								<div class="size-204 flex-w flex-m respon6-next">
-									<div class="wrap-num-product flex-w m-r-20 m-tb-10">
-										<div class="btn-num-product-down cl8 hov-btn3 trans-04 flex-c-m">
-											<i class="fs-16 zmdi zmdi-minus"></i>
-										</div>
-
-										<input class="mtext-104 cl3 txt-center num-product"  name="quantity" min="1" max="5" value="1" type="number">
-
-										<div class="btn-num-product-up cl8 hov-btn3 trans-04 flex-c-m">
-											<i class="fs-16 zmdi zmdi-plus"></i>
-										</div>
-									</div>
 
 									<button id="add-to-cart-button" class="flex-c-m stext-101 cl0 size-101 bg1 bor1 hov-btn1 p-lr-15 trans-04">
 										Ajouter au panier
@@ -204,4 +232,31 @@
 		</div>
 	</section>
 
+@endsection
+
+@section('javascripts')
+  @parent
+  <script type="text/javascript">
+    $(document).ready(function(){
+
+      if($('#size').length){  // if size exists
+        updateStockSelectOptions()
+      }
+      $('#size').change(function(){
+        updateStockSelectOptions();
+      });
+
+
+      function updateStockSelectOptions(){
+        let code = '#'+$('#size').val()+'-stock';
+        let stock = $(code).text();
+        let options = "";
+        for(i=1;i<=stock;i++){
+          options+= "<option value="+i+" >"+i+"</option>";
+        }
+        $('#stock').empty().append(options);
+      }
+
+    });
+  </script>
 @endsection
