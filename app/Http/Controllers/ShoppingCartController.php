@@ -5,11 +5,11 @@ namespace Beone\Http\Controllers;
 use Beone\Product;
 use Beone\Repositories\PurchaseRepository;
 use Beone\Repositories\ProductRepository;
-use Beone\Repositories\ProductSizeRepository;
 use Illuminate\Http\Request;
 use Beone\Http\Requests\AddToCartRequest;
 use Beone\Traits\CartTrait;
 use Beone\Traits\StripeIntentTrait;
+use Beone\Events\OrderPurshased;
 
 class ShoppingCartController extends Controller
 {
@@ -20,13 +20,10 @@ class ShoppingCartController extends Controller
      */
      protected $products;
 
-     protected $productSizes;
-
      protected $purchases;
 
-     public function __construct(ProductRepository $products,ProductSizeRepository $productSizes,PurchaseRepository $purchases){
+     public function __construct(ProductRepository $products,PurchaseRepository $purchases){
        $this->products = $products;
-       $this->productSizes = $productSizes;
        $this->purchases = $purchases;
 
      }
@@ -108,8 +105,7 @@ class ShoppingCartController extends Controller
     public function paymentConfirmation(Request $request){
         $this->captureIntent(session('client_stripe_intent')->id);
         $this->purchases->save(session('cart'),$request->all());
-        // event(new PurchaseOrdered(session('cart')));
-        $this->updateStock(session('cart'));
+        event(new OrderPurshased(session('cart')));
 
         $this->deleteSessionCart();
         return response()->json(['status'=>'purchase created']);
@@ -160,29 +156,6 @@ class ShoppingCartController extends Controller
       }
       return 0;
     }
-
-
-    //Should be on event Listener
-    private function updateStock($cart){
-      foreach ($cart as $item) {
-        $product=$this->products->find($item['product_id']);
-        $quantityBuyed = $item['quantity'];
-
-        if(!isset($item['size'])){
-          $stock = $product->quantity();
-          $remainingStock = $stock - $quantityBuyed;
-          $product->quantity=$remainingStock;
-          $product->save();
-        }
-        else{
-          $size_id = $this->productSizes->getIdByCode($item['size']);
-          $stock = $product->sizes->find($size_id)->pivot->quantity;
-          $remainingStock = $stock - $quantityBuyed;
-          $product->sizes()->updateExistingPivot($size_id,['quantity'=>$remainingStock]);
-        }
-      }
-    }
-
 
 
 

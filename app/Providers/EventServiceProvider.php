@@ -18,6 +18,9 @@ class EventServiceProvider extends ServiceProvider
         Registered::class => [
             SendEmailVerificationNotification::class,
         ],
+        \Beone\Events\OrderPurshased::class=> [
+          \Beone\Listeners\UpdateStockProduct::class,
+        ]
     ];
 
     /**
