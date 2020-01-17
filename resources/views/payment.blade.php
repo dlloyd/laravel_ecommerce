@@ -30,9 +30,10 @@
                 <label>Pays
                   <abbr class="required" style="color:red;" title="champs obligatoire">*</abbr>
                 </label>
-                <select class="form-control" name="country" id="shipping_country" required>
+                <select class="form-control" name="country-select" id="shipping_country" required>
                   @include('country_select')
                 </select>
+                <input type="text" name="country" value="" hidden />
 
               </div>
 
@@ -152,16 +153,19 @@
 
   <script type="text/javascript">
     $(document).ready(function(){
-      let country_code = $('#shipping_country :selected').val()
-      updateShipping(country_code)
-      $('#shipping_country').change(function(){
-        country_code = $('#shipping_country :selected').val()
-        updateShipping(country_code)
-        console.log(country_code)
-      })
-      console.log(country_code)
 
-      function updateShipping(code){
+      updateShipping();
+
+      $('#shipping_country').change(function(){
+        updateShipping()
+      });
+
+      function updateShipping(){
+        let code = $('#shipping_country :selected').val()
+        console.log(code)
+        let country_name = $('#shipping_country :selected').text()
+        $("input[name='country']").val(country_name)
+        console.log($("input[name='country']").val())
         let url = '{{ route("set_shipping_price") }}';
         let formData = new FormData();
         formData.append('country_code',code);

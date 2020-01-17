@@ -10,6 +10,10 @@ class ProductSizeRepository {
     return ProductSize::find($size_id);
   }
 
+  public function getIdByCode($code){
+    return ProductSize::whereCode($code)->firstOrFail();
+  }
+
   public function getAll(){
     return ProductSize::all();
   }

@@ -47,7 +47,7 @@ namespace Beone\Traits;
           }
 
           $total += $shipping;
-          return $total;
+          return number_format($total, 2, ',', ' ');;
         }
 
 
