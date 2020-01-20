@@ -71,7 +71,7 @@
 						<!--  -->
             <form id="cart_add" method="post" action="{{route('add_to_cart',['product'=>$product->id])}}" >
 						<div class="p-t-33">
-
+              @php($stock = 0)
               @if(count($product->sizes)>0)
     						<div class="flex-w flex-r-m p-b-10">
     							<div class="size-203 flex-c-m respon6">
@@ -92,6 +92,7 @@
     									</select>
     									<div class="dropDownSelect2"></div>
                       @foreach ($product->sizes as $size)
+                        @php($stock+= $size->pivot->quantity)
                         <div id="{{$size->code}}-stock" hidden>{{$size->pivot->quantity}}</div>
                       @endforeach
 
@@ -117,29 +118,36 @@
                 <div class="size-203 flex-c-m respon6">
                 </div>
                 <div class="size-204 respon6-next">
-                  <div class="rs1-select2 bor8 bg0">
-                    <select id="stock" class="js-select2" name="quantity">
-                      @for($i=1;$i<= $product->quantity; $i++)
-                      <option value="{{$i}}">{{$i}}</option>
-                      @endfor
-                    </select>
-                    <div class="dropDownSelect2"></div>
-                  </div>
+                  @php($stock +=$product->quantity)
+                  @if($product->quantity > 0)
+                    <div class="rs1-select2 bor8 bg0">
+                      <select id="stock" class="js-select2" name="quantity">
+                        @for($i=1;$i<= $product->quantity; $i++)
+                          <option value="{{$i}}">{{$i}}</option>
+                        @endfor
+                      </select>
+                      <div class="dropDownSelect2"></div>
+                    </div>
+                  @endif
 
                 </div>
               </div>
 
               @endif
 
-
               <div class="flex-w flex-r-m p-b-10">
 								<div class="size-204 flex-w flex-m respon6-next">
+                  @if($stock > 0 )
+  									<button id="add-to-cart-button" class="flex-c-m stext-101 cl0 size-101 bg1 bor1 hov-btn1 p-lr-15 trans-04">
+  										Ajouter au panier
+  									</button>
 
-									<button id="add-to-cart-button" class="flex-c-m stext-101 cl0 size-101 bg1 bor1 hov-btn1 p-lr-15 trans-04">
-										Ajouter au panier
-									</button>
+                  @else
+                    <div style="color:red"> Stock épuisé </div>
+                  @endif
 								</div>
 							</div>
+
 						</div>
           </form>
 

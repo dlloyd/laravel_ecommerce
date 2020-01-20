@@ -28,7 +28,8 @@ class ProductRequest extends FormRequest
           'description' => 'required',
           'priceUnit' => 'required',
           'product_type_id' => 'required',
-        
+          'quantity'=> 'nullable'
+
       ];
 
       return $rules;
