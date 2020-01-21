@@ -84,7 +84,7 @@ function addItemToCart(item){
     if(li.length >0){
       let price = parseFloat(li.data('price'));
       let qty = parseFloat(li.data('quantity'));
-      let itemTotalPrice = price*qty; 
+      let itemTotalPrice = price*qty;
       let totalAmount = parseFloat($('#cart-total').text()) - itemTotalPrice; // update the total amount
       $('#cart-total').text(totalAmount.toFixed(2));
       updateCartItemsNumber(-1);
@@ -145,7 +145,7 @@ function addItemToCart(item){
 
     let deleteButton = "<form class='cart_remove'  method='post' action="+item['delete_route']+" >"+
                           "<input type='hidden' name='_method' value='delete'>"+
-                          "<button type='submit' >Supprimer</button></form>";
+                          "<button type='submit' ><i class='zmdi zmdi-delete'></i> &nbsp; supprimer</button></form>";
 
 
     let itemContent = "<li class='header-cart-item flex-w flex-t m-b-12' data-id="+item['id']+"  data-price="+item['price']+"  data-quantity="+item['quantity']+" >"+

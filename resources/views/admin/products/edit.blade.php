@@ -56,7 +56,7 @@
                               </div>
                           </div>
 
-                          <div class="row form-group">
+                          <div id='size-form' class="row form-group">
                               <div class="col col-md-3"><label class=" form-control-label">Tailles</label></div>
                               <div class="col col-md-9">
                                 <div class="form-check">
@@ -88,7 +88,7 @@
                             </div>
                           </div>
 
-                          <div class="row form-group">
+                          <div id="quantity-form" class="row form-group">
                               <div class="col col-md-3"><label for="name" class=" form-control-label">Quantité en stock</label></div>
                               <div class="col-12 col-md-9"><input min="0" type="number" value="{{$product->quantity}}" name="quantity"  class="form-control"><small class="form-text text-muted">Uniquement utile pour produits sans taille</small></div>
                           </div>
@@ -112,6 +112,32 @@
 @endsection
 
 @section('scripts')
+
+<script type="text/javascript">
+  jQuery(document).ready(function(){
+    adaptFormFields()
+
+    jQuery('#product_type_id').change(function(){
+      adaptFormFields()
+    })
+
+    function adaptFormFields(){
+      let type = jQuery('#product_type_id').children("option:selected").text()
+      console.log(type)
+      type = type.toLowerCase()
+      if(type=="sac" || type=="casquette"){
+        jQuery('#size-form').hide()
+        jQuery('#quantity-form').show()
+      }
+      else{
+        jQuery('#quantity-form').hide()
+        jQuery('#size-form').show()
+      }
+    }
+
+  });
+</script>
+
 <script>
   jQuery(document).ready(function($){
     var uploadedDocumentMap = {}
