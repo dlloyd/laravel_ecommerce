@@ -14,7 +14,7 @@ class AddQuantityToProductSizeTable extends Migration
     public function up()
     {
         Schema::table('product_size', function (Blueprint $table) {
-            $table->integer('quantity');
+            $table->integer('quantity')->nullable();
         });
     }
 
