@@ -40,7 +40,7 @@ class UpdateStockProduct
         $quantityBuyed = $item['quantity'];
 
         if(!isset($item['size'])){
-          $stock = $product->quantity();
+          $stock = $product->quantity;
           $remainingStock = $stock - $quantityBuyed;
           $product->quantity=$remainingStock;
           $product->save();

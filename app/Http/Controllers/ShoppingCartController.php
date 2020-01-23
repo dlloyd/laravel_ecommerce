@@ -52,51 +52,32 @@ class ShoppingCartController extends Controller
 
 
     public function removeFromCart($id){
-        $cart = session()->get('cart');
-        $newCart = $this->removeItemFromCart($cart,$id);
-        session()->put('cart', $newCart);
-
-        if(session()->get('client_stripe_intent')){
-          $cartAmount = $this->totalCartAmount(session('cart'),$this->getShippingPrice());
-          if($cartAmount<=0){
-            session()->forget('client_stripe_intent');
-          }
-          else{
-            $this->updateIntentAmount(session('client_stripe_intent')->id,$cartAmount);
-          }
-
+        $newCart = $this->removeItemFromCart(session('cart'),$id);
+        if(empty($newCart)){
+          $this->deleteCart();
         }
+        else{
+          $cartAmount = $this->totalCartAmount(session('cart'),$this->getShippingPrice());
+          $this->updateIntentAmount(session('client_stripe_intent')->id,$cartAmount);
+          session()->put('cart', $newCart);
+        }
+
         return response()->json(['id'=>$id,'status'=>'removed successfully']);
 
     }
 
 
     public function showPaymentPage(){
-      if(!session()->get('cart')){
-        return redirect()->route('welcome');
-      }
-
-      if(session()->get('client_stripe_intent')){
-        $intent = session('client_stripe_intent');
-      }
-      else{
-          $amount = $this->totalCartAmount(session('cart'),$this->getShippingPrice());
-          $intent = $this->createPaymentIntent($amount);
-          session()->put('client_stripe_intent',$intent);
-      }
-
+      $intent = $this->getPaymentIntent();
       return view('payment',['intentSecret'=>$intent->client_secret]);
 
     }
 
     public function setShippingPrice(Request $request){
-      if($request->country_code=="FR"){
-        $price = 2.99;
-      }
-      else{
-        $price = 5.00;
-      }
+
+      $price= $this->getShippingPriceByCountryCode($request->country_code);
       $total = $this->totalCartAmount(session('cart'),$price);
+      $this->updateIntentAmount(session('client_stripe_intent')->id,$total);
       session()->put('shipping',$price);
       return response()->json(['shipping_price'=>$price, 'total'=>$total]);
     }
@@ -107,40 +88,27 @@ class ShoppingCartController extends Controller
         $this->purchases->save(session('cart'),$request->all());
         event(new OrderPurshased(session('cart')));
 
-        $this->deleteSessionCart();
+        $this->deleteCart();
         return response()->json(['status'=>'purchase created']);
 
 
     }
 
-    public function deleteCart(){
-      $this->deleteSessionCartBis(session());
-      return response()->json(['status'=>'cart deleted']);
+
+
+
+
+
+    private function deleteCart(){
+      session()->forget(['cart','client_stripe_intent','shipping']);
     }
 
-    private function deleteSessionCart(){
-      session()->forget('cart');
-      session()->forget('client_stripe_intent');
-      session()->forget('shipping');
-    }
-
-    private function deleteSessionCartBis($session){
-      $session->forget('cart');
-      $session->forget('client_stripe_intent');
-      $session->forget('shipping');
-
-    }
 
     private function addItemToSessionCart($product,$request){
-      if(!session()->get('cart')){
-        $cartAndNewItem = $this->addItemToCart($product,$request,null);
-      }
-      else{
-        $cartAndNewItem = $this->addItemToCart($product,$request,session('cart'));
-      }
-
+      $cart = (!session()->get('cart') ? null : session('cart'));
+      $cartAndNewItem = $this->addItemToCart($product,$request,$cart);
       session()->put('cart', $cartAndNewItem['cart']);
-      return $cartAndNewItem['item'];
+      return $cartAndNewItem['item']; // return the last item added
     }
 
     private function updateSessionCartAmount(){
@@ -155,6 +123,23 @@ class ShoppingCartController extends Controller
         return session('shipping');
       }
       return 0;
+    }
+
+    private function getShippingPriceByCountryCode($code){
+      $amount = ($code=="FR" ? 2.99 : 5.00);
+      return $amount;
+    }
+
+    private function getPaymentIntent(){
+      if(session()->get('client_stripe_intent')){
+        return session('client_stripe_intent');
+      }
+      else{
+          $amount = $this->totalCartAmount(session('cart'),$this->getShippingPrice());
+          $intent = $this->createPaymentIntent($amount);
+          session()->put('client_stripe_intent',$intent);
+          return $intent;
+      }
     }
 
 

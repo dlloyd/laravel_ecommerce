@@ -4,7 +4,8 @@
 	<title>BeOne the Vision</title>
 	<meta charset="UTF-8">
 
-	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="viewport" content="width=device-width, initial-scale=1"
+		description="Be one the Vision site de ventes en ligne des produits pour hommes et femmes (mixte) t-shirt,hoodie,sac,casquette,coupe-vent de notre marque Be one the vision">
 <!--===============================================================================================-->
 
 <!--===============================================================================================-->
@@ -103,25 +104,36 @@
 
 					<ul>
 						<li class="p-b-10">
-							<a href="#" class="stext-107 cl7 hov-cl1 trans-04">
+							<a href="{{route('show_by_type',['code'=>'TSH'])}}" class="stext-107 cl7 hov-cl1 trans-04">
 								T-shirt
 							</a>
 						</li>
 
 						<li class="p-b-10">
-							<a href="#" class="stext-107 cl7 hov-cl1 trans-04">
+							<a href="{{route('show_by_type',['code'=>'HOO'])}}" class="stext-107 cl7 hov-cl1 trans-04">
 								Hoodie
 							</a>
 						</li>
 
 						<li class="p-b-10">
-							<a href="#" class="stext-107 cl7 hov-cl1 trans-04">
+							<a href="{{route('show_by_type',['code'=>'PUL'])}}" class="stext-107 cl7 hov-cl1 trans-04">
+								Pull
+							</a>
+						</li>
+						<li class="p-b-10">
+							<a href="{{route('show_by_type',['code'=>'COU'])}}" class="stext-107 cl7 hov-cl1 trans-04">
+								Coupe-vent
+							</a>
+						</li>
+
+						<li class="p-b-10">
+							<a href="{{route('show_by_type',['code'=>'CAS'])}}" class="stext-107 cl7 hov-cl1 trans-04">
 								Casquette
 							</a>
 						</li>
 
 						<li class="p-b-10">
-							<a href="#" class="stext-107 cl7 hov-cl1 trans-04">
+							<a href="{{route('show_by_type',['code'=>'SAC'])}}" class="stext-107 cl7 hov-cl1 trans-04">
 								Sac
 							</a>
 						</li>

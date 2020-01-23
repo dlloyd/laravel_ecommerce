@@ -33,7 +33,7 @@ Route::post('/cart/add/{product}','ShoppingCartController@addToCart')->name('add
 
 Route::delete('/cart/remove/{id}','ShoppingCartController@removeFromCart')->name('remove_from_cart');
 
-Route::get('/payment','ShoppingCartController@showPaymentPage')->name('payment_page');
+Route::get('/payment','ShoppingCartController@showPaymentPage')->name('payment_page')->middleware('cart.checked');
 
 Route::post('/payment_validation','ShoppingCartController@paymentConfirmation')->name('payment_confirmation');
 
