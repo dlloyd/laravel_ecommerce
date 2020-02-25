@@ -96,9 +96,6 @@ class ShoppingCartController extends Controller
 
 
 
-
-
-
     private function deleteCart(){
       session()->forget(['cart','client_stripe_intent','shipping']);
     }

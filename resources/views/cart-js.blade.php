@@ -125,6 +125,17 @@ function addItemToCart(item){
 
   }
 
+  function initCartPayment(items){
+    let totalAmount = 0
+    for (let [key,item] of Object.entries(items)) {
+      totalAmount += parseFloat(item['price']*item['quantity'])
+      appendItemToCartPaymentContent(item)
+
+    }
+
+    $('#cart-total').text(totalAmount.toFixed(2));
+  }
+
   function toggleCartButtons(itemsNumber){
     if(itemsNumber==0){
       $('#payment-link').hide();
@@ -159,6 +170,22 @@ function addItemToCart(item){
 
 
     $('#cart_content').append(itemContent);
+  }
+
+
+  function appendItemToCartPaymentContent(item){
+    let textSize='';
+    if(item['size']){
+      textSize = "("+item['size']+")";
+    }
+
+    let itemContent = "<tr> <th class='how-itemcart1'> <img src="+item['thumb']+" alt='IMG'> </th>"+
+                        "<th>"+item['name']+textSize+"</span></th>"+
+                          "<td>"+
+                            "<span class='amount'>"+item['quantity']+" x" + item['price']+" &euro;</span>"+
+                          "</td></tr>";
+
+    $('tbody').append(itemContent);
   }
 
 

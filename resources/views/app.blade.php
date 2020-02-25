@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="{{ app()->getLocale() }}">
 <head>
-	<title>BeOne the Vision</title>
+	<title>BeOne the Vision - @yield('title')</title>
 	<meta charset="UTF-8">
 
 	<meta name="viewport" content="width=device-width, initial-scale=1"
@@ -63,8 +63,20 @@
 					<div class="flex-w flex-sb p-t-36 gallery-lb">
 						<!-- item gallery sidebar -->
 						<div class="wrap-item-gallery m-b-10">
-							<a class="item-gallery bg-img1" href="images/gallery-01.jpg" data-lightbox="gallery"
-							style="background-image: url('images/gallery-01.jpg');"></a>
+							<a class="item-gallery bg-img1" href="images/side_pic1.jpg" data-lightbox="gallery"
+							style="background-image: url('images/side_pic1.jpg');"></a>
+						</div>
+						<div class="wrap-item-gallery m-b-10">
+							<a class="item-gallery bg-img1" href="images/side_pic2.jpg" data-lightbox="gallery"
+							style="background-image: url('images/side_pic2.jpg');"></a>
+						</div>
+						<div class="wrap-item-gallery m-b-10">
+							<a class="item-gallery bg-img1" href="images/side_pic3.jpg" data-lightbox="gallery"
+							style="background-image: url('images/side_pic3.jpg');"></a>
+						</div>
+						<div class="wrap-item-gallery m-b-10">
+							<a class="item-gallery bg-img1" href="images/side_pic4.jpg" data-lightbox="gallery"
+							style="background-image: url('images/side_pic4.jpg');"></a>
 						</div>
 
 					</div>
@@ -169,13 +181,13 @@
 					<ul>
 						<li class="p-b-10">
 							<a href="#" class="stext-107 cl7 hov-cl1 trans-04">
-								 Email: beone@mail.fr
+								 Email: beonethevisionclothes@gmail.com
 							</a>
 						</li>
 
 						<li class="p-b-10">
 							<a href="#" class="stext-107 cl7 hov-cl1 trans-04">
-								Phone: +33456465465
+								Phone: +33781429892
 							</a>
 						</li>
 
@@ -300,7 +312,9 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
        url : '/cart/details',
        type : 'GET',
        dataType : 'json',
+			 cache:false,
        success : function(data){
+				 console.log(data)
 					 initCart(data)
        },
 			 error: function(error){

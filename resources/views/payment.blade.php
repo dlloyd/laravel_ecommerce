@@ -4,6 +4,7 @@
   @include('headers.basic')
 @endsection
 
+@section('title','Page de paiement')
 @section('content')
 
   <div class="container">
@@ -82,18 +83,7 @@
 
                 <table class="table shop_table ecommerce-checkout-review-order-table">
                   <tbody>
-                    @php($total=0)
-                    @foreach (session('cart') as $id=>$item)
-                      @php($total += $item['price'] * $item['quantity'])
-                      <tr>
-                        <th class="how-itemcart1"> <img src="{{asset($item['thumb'])}}" alt="IMG"> </th>
-                        <th>{{$item['name']}}  @isset($item['size']) ({{$item['size']}}) @endisset</span></th>
-                        <td>
-                          <span class="amount">{{$item['quantity']}} x {{$item['price']}} &euro;</span>
-                        </td>
-                      </tr>
-                    @endforeach
-                    @php($total+=session('shipping'))
+                     <!-- Dynamic cart content !-->
 
                   </tbody>
                 </table>
@@ -110,7 +100,7 @@
 
                 <div class="size-209 p-t-1">
                   <span id="total" class="mtext-110 cl2">
-                    {{$total}}
+
                   </span> &euro;
                 </div>
               </div>
@@ -153,6 +143,26 @@
 
   <script type="text/javascript">
     $(document).ready(function(){
+
+      $.ajax({
+         url : '/cart/details',
+         type : 'GET',
+         dataType : 'json',
+         cache: false,
+         success : function(data){
+  				 console.log(data)
+
+           let cartIsEmpty = !Object.keys(data).length
+
+           if(cartIsEmpty){
+             window.location.href = "{{route('welcome')}}"
+           }
+           initCartPayment(data)
+         },
+  			 error: function(error){
+  				 console.log(error)
+  			 }
+      });
 
       updateShipping();
 

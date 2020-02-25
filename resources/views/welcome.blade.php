@@ -4,6 +4,7 @@
   @include('headers.welcome')
 @endsection
 
+@section('title','Accueil')
 @section('content')
 
 <!-- Slider -->

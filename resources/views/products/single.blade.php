@@ -4,6 +4,8 @@
   @include('headers.basic')
 @endsection
 
+@php($title = $product->type->name.' - '.$product->name)
+@section('title', $title)
 @section('content')
 
   <!-- breadcrumb -->

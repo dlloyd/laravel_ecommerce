@@ -4,6 +4,7 @@
   @include('headers.basic')
 @endsection
 
+@section('title',$type->name)
 @section('content')
 
   <section class="bg0 p-t-23 p-b-130">
